@@ -58,7 +58,8 @@ h3.heading{
 
 .newplaces img{
 	width:100%;
-	height:20rem;
+	height: 100%;
+	object-fit:cover;
 	transition:transform .5s ease;
 }
 .row.no-padding [class*=col-]{
@@ -97,8 +98,17 @@ footer a:hover{
 	background-color: #eceef0;
 }
 
+.comment{
+	border: .08rem solid #808080;
+	margin-top: .7rem;
+	border-radius: .2rem;
+	background-color: #eceef0;
+	padding: .5rem;
+}
+
 .newplaces{
 	overflow:hidden;
+	height:20vw;
 }
 
 .narrow{
@@ -149,9 +159,11 @@ hr.socket{
 	min-height: 65.5vh;
 }
 #place{
-	margin: 2rem auto;
+	margin: 2rem auto 0;
 	padding: 1rem 0;
-	width: 85%;
+	min-width: 90vw;
+	width:100vh;
+	max-width: 100vw;
 	background-color: #eceef0;
 }
 #place img{
@@ -159,8 +171,15 @@ hr.socket{
 	margin: 1rem 0;
 }
 #placeslist{
-	width:85%;
+	min-width:80vw;
+	max-width:80vw;
 	padding: 2rem 1rem;
+}
+
+#comment{
+	min-width:90vw;
+	max-width:90vw;
+	padding: 1rem 0;
 }
 
 .form-container{

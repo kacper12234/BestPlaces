@@ -113,6 +113,10 @@ public class Places {
 		this.down = down;
 	}
 
+	public long getId() {
+		return id;
+	}
+
 	
 	
 	}

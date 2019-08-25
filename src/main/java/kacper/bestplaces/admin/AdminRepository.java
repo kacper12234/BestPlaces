@@ -35,4 +35,12 @@ public interface AdminRepository extends JpaRepository<User, Integer> {
 	@Modifying
 	@Query(value="DELETE FROM user WHERE user_id=:id",nativeQuery=true)
 	void deleteUserFromUser(@Param("id") int id);
+	
+	@Modifying
+	@Query(value="DELETE FROM places WHERE name=:name",nativeQuery=true)
+	void deletePlace(@Param("name") String name);
+	
+	@Modifying
+	@Query(value="UPDATE places SET id=:nid WHERE id=:id",nativeQuery=true)
+	void updateId(@Param("nid") long nid,@Param("id") long id);
 }

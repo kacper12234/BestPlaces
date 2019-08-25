@@ -58,7 +58,7 @@ function startSearchType()
 <c:forEach var="p" items="${placesList }">
 <c:set var="count" value="${count+1 }" scope="page"/>
 <div class="placeslist">
-<a href="/places/cat/${p.type }/${p.name }">
+<a href="/places/${p.type }/${p.name }/1">
 <div class="row">
 <div class="col-md-4">
 <img src="/resources/images/<c:out value="${p.author }"/>/<c:out value="${p.link }"/>">

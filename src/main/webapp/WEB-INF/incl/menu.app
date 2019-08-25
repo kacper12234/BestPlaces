@@ -19,9 +19,9 @@
         <s:message code="menu.cat"/></a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
         <a class="dropdown-item" href="/places/1"><s:message code="menu.cata"/></a>
-          <a class="dropdown-item" href="/places/Natura/1"><s:message code="menu.cat1"/></a>
-          <a class="dropdown-item" href="/places/Restauracje/1"><s:message code="menu.cat2"/></a>
-          <a class="dropdown-item" href="/places/Zabytki/1"><s:message code="menu.cat3"/></a>
+          <a class="dropdown-item" href="/places/cat/Natura/1"><s:message code="menu.cat1"/></a>
+          <a class="dropdown-item" href="/places/cat/Restauracje/1"><s:message code="menu.cat2"/></a>
+          <a class="dropdown-item" href="/places/cat/Zabytki/1"><s:message code="menu.cat3"/></a>
         </div>
       </li>
 		<sec:authorize access="hasRole('ANONYMOUS')">

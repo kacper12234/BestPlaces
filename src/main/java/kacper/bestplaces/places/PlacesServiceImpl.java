@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import kacper.bestplaces.user.User;
+import kacper.bestplaces.user.UserRepository;
 import kacper.bestplaces.utilities.UserUtilities;
 
 @Service("placesService")
@@ -26,10 +28,13 @@ public class PlacesServiceImpl implements PlacesService{
 	@Autowired
 	private LikesRepository likesRepository;
 	
+	@Autowired
+	private UserRepository userRepository;
+	
 	@Override
 	public void savePlace(Places place,MultipartFile mFile)
 	{
-		place.setAuthor(UserUtilities.getLoggedUser());
+		place.setAuthor(getUsername());
 		place.setId(placesRepository.count()+1);
 		String uploadDir = System.getProperty("user.dir")+"/target/classes/static/images/"+place.getAuthor();
 		File file;
@@ -91,7 +96,7 @@ public class PlacesServiceImpl implements PlacesService{
 	@Override
 	public void saveLike(Likes like,String name) {
 		like.setName(name);
-		like.setUser(UserUtilities.getLoggedUser());
+		like.setUser(getUsername());
 		like.setLikes(1);
 		likesRepository.save(like);
 	}
@@ -99,16 +104,28 @@ public class PlacesServiceImpl implements PlacesService{
 	@Override
 	public void saveDisLike(Likes like,String name) {
 		like.setName(name);
-		like.setUser(UserUtilities.getLoggedUser());
+		like.setUser(getUsername());
 		like.setLikes(2);
 		likesRepository.save(like);
 	}
 
 	@Override
+	public void saveComment(Likes like,String name) {
+		like.setName(name);
+		like.setUser(getUsername());
+		likesRepository.save(like);
+	}
+	
+	@Override
 	public Likes findLikeByPlaceAndUser(String place,String user) {
 		return likesRepository.findByPlaceAndUser(place,user);
 	}
 
+	@Override
+	public void changeComment(String comment,int id) {
+		likesRepository.changeComment(comment, id);
+	}
+	
 	@Override
 	public void changeRate(int status, int id) {
 		likesRepository.changeRate(status, id);
@@ -139,6 +156,19 @@ public class PlacesServiceImpl implements PlacesService{
 	public Page<Places> findPlacesTypeInLoc(String param, String type, Pageable pg) {
 		Page<Places> places=placesRepository.findTypeInLoc(param, type, pg);
 		return places;
+	}
+
+	@Override
+	public Page<Likes> findByPlace(String place,Pageable pg) {
+		Page<Likes> comments=likesRepository.findByName(place,pg);
+		return comments;
+	}
+
+	@Override
+	public String getUsername() {
+		User u=userRepository.findByEmail(UserUtilities.getLoggedUser());
+		String fname=u.getName()+" "+u.getLastName();
+		return fname;
 	}
 
 }

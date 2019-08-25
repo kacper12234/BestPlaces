@@ -4,7 +4,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -19,24 +18,14 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/3c44ec830b.js"></script>
-    <script type="text/javascript">
-    <c:set var="p" value="${place }"/>
-	function leave()
-	{
-		window.location='/places/${p.type }/${p.name }';
-	}
-	</script>
 <title><s:message code="menu.mainPage"/></title>
 </head>
 <body data-target="#navbarResponsive">
 <div id="bg">
 <%@include file="/WEB-INF/incl/menu.app" %>
-<c:if test="${fn:endsWith(requestScope['javax.servlet.forward.servlet_path'], '/like') or fn:endsWith(requestScope['javax.servlet.forward.servlet_path'], '/dislike')}">
-<script>
-	leave();
-</script>
-</c:if>
+<c:set var="count" value="${recordStartCounter }"/>
 <div id="place" class="container">
+<c:set var="p" value="${place }"/>
 <div class="col-12">
 <h1><c:out value="${p.name }"/></h1>
 <h3><c:out value="${p.loc }"/></h3>
@@ -45,6 +34,8 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 <img src="/resources/images/<c:out value="${p.author }"/>/<c:out value="${p.link }"/>">
 </div>
 <div class="col-lg">
+<div class="row">
+<div class="col">
 <div class="row" style="margin: .5rem; ">
 <sec:authorize access="isAuthenticated()">
 <c:choose>
@@ -79,8 +70,120 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </sec:authorize>
 <h5 style="margin: .7rem"><c:out value="${p.down }"/></h5>
 </div>
-<p><c:out value="${p.descrp }"/>"</p>
 </div>
+<sec:authorize access="hasRole('ROLE_ADMIN')">
+<div class="col-2" style="text-align: right;">
+<a href="/places/${p.type }/${p.name }/delete">
+<i class="fas fa-times fa-3x" style="color: red;"></i></a>
+</div>
+</sec:authorize>
+</div>
+<p><c:out value="${p.descrp }"/>"</p>
+<p><s:message code="place.author"/><c:out value="${p.author }"/></p>
+</div>
+</div>
+<div id="comment" class="container">
+<sec:authorize access="isAuthenticated()">
+<sf:form class="form" action="/places/${p.type}/${p.name}/addcom" modelAttribute="text" method="POST">
+<div class="form-group">
+<label for="mycom">
+<c:choose>
+<c:when test="${empty text.comment}">
+<s:message code="comment.label.add"/>
+</c:when>
+<c:otherwise>
+<s:message code="comment.label.mod"/>
+</c:otherwise>
+</c:choose>
+</label>
+<sf:textarea path="comment" type="text" class="form-control" id="mycom"/>
+</div>
+<button type="submit" class="btn btn-success btn-lg">
+<c:choose>
+<c:when test="${empty text.comment}">
+<s:message code="menu.add"/>
+</c:when>
+<c:otherwise>
+<s:message code="comment.mod"/>
+</c:otherwise>
+</c:choose>
+</button>
+</sf:form>
+</sec:authorize>
+<sec:authorize access="hasRole('ANONYMOUS')">
+<h3><s:message code="place.anonim"/></h3>
+</sec:authorize>
+<c:forEach var="r" items="${rev }">
+<c:set var="count" value="${count+1 }" scope="page"/>
+<div class="comment">
+<div class="row">
+<div class="col">
+<h5><c:out value="${r.user }"/></h5>
+</div>
+<div class="col" style="text-align: right;">
+<c:if test="${r.likes == 1 }">
+<i class="fas fa-thumbs-up" style="color: green;"></i>
+</c:if>
+<c:if test="${r.likes == 2 }">
+<i class="fas fa-thumbs-down" style="color: red;"></i>
+</c:if>
+</div>
+</div>
+<div class="col" style="padding: 0;">
+<c:out value="${r.comment }"/>
+</div>
+</div>
+</c:forEach>
+<c:if test="${not empty rev }">
+<div id="pages">
+<ul class="pagination">
+    <c:choose>
+    <c:when test="${currentPage > 1 }">
+    <li class="page-item" onclick="window.location.href='${pageContext.request.contextPath}/places/${p.type }/${p.name }/${currentPage - 1}'">
+     <a class="page-link" aria-label="Previous">
+     <span aria-hidden="true">&laquo;</span>
+      </a>
+      </li>
+    </c:when>
+    <c:otherwise>
+    <li class="page-item disabled">
+     <a class="page-link" aria-label="Previous" style="background-color: #eceef0!important;
+	border: .01rem solid #7b9dda;">
+     <span aria-hidden="true">&laquo;</span>
+      </a>
+      </li>
+    </c:otherwise>
+    </c:choose>
+    <c:forEach var="i" begin="1" end="${totalPages }">
+    <c:choose>
+    <c:when test="${i == currentPage }">
+    <li class="page-item active"><a class="page-link">${i }</a></li>
+    </c:when>
+    <c:otherwise>
+    <li class="page-item"><a class="page-link">${i }</a></li>
+    </c:otherwise>
+    </c:choose>
+    </c:forEach>
+    <c:choose>
+    <c:when test="${currentPage < totalPages }">
+    <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/${p.type }/${p.name }/${currentPage + 1}'">
+    <a class="page-link"  aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+      </li>
+      </c:when>
+      <c:otherwise>
+      <li class="page-item disabled">
+      <a class="page-link"  aria-label="Next" style="background-color: #eceef0!important;
+	border: .01rem solid #7b9dda;">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+      </li>
+      </c:otherwise>
+    </c:choose>
+  </ul>
+</div>
+</c:if>
 </div>
 <%@include file="/WEB-INF/incl/footer.app" %>
 </div>

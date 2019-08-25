@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import kacper.bestplaces.emailSender.Email;
 import kacper.bestplaces.validators.AddPlaceValidator;
 
 @Controller
@@ -54,6 +55,7 @@ public class AddPlaceController {
 				placesService.savePlace(places,mFile);
 				List<Places> egPlaces=placesService.getEgPlaces();
 				model.addAttribute("egPlaces", egPlaces);
+				model.addAttribute("email",new Email());
 				model.addAttribute("message", messageSource.getMessage("place.add.success",null, locale));
 			returnPage="index";
 		}

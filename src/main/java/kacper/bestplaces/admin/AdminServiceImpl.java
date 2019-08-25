@@ -2,6 +2,7 @@ package kacper.bestplaces.admin;
 
 
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kacper.bestplaces.places.PlacesRepository;
 import kacper.bestplaces.user.Role;
 import kacper.bestplaces.user.RoleRepository;
 import kacper.bestplaces.user.User;
@@ -33,6 +35,9 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Autowired
 	private AdminRepository adminRepository;
+	
+	@Autowired
+	private PlacesRepository placesRepository;
 	
 	@Autowired
 	private RoleRepository roleRepository;
@@ -96,5 +101,16 @@ public class AdminServiceImpl implements AdminService {
 		LOG.debug("[WYWOŁANIE >>> AdminServiceImpl.deleteUserFromUser > PARAMETR: "+id);
 		adminRepository.deleteUserFromUserRole(id);
 		adminRepository.deleteUserFromUser(id);
+	}
+	
+	@Override
+	public void deletePlace(String name) {
+		long i=placesRepository.findByName(name).getId()+1;
+		long count=placesRepository.count();
+		File r=new File(System.getProperty("user.dir")+"/target/classes/static/images/"+placesRepository.findByName(name).getLink());
+		adminRepository.deletePlace(name);
+		r.delete();
+		for(;i<=count;i++)
+			adminRepository.updateId(i-1, i);
 	}
 }

@@ -18,4 +18,5 @@ public interface AdminService {
 	void insertInBatch(List<User> userList);
 	void saveAll(List<User> userList);
 	void deleteUserById(int id);
+	void deletePlace(String name);
 }

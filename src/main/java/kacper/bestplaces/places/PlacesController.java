@@ -3,6 +3,7 @@ package kacper.bestplaces.places;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,7 +43,7 @@ public class PlacesController {
 	}
 	
 	@GET
-	@RequestMapping(value="/places/{type}/{page}")
+	@RequestMapping(value="/places/cat/{type}/{page}")
 	public String placesType(@PathVariable("page") int page,@PathVariable("type") String type, Model model)
 	{
 		Page<Places> pages=placesService.getPlacesByType(type,PageRequest.of(page-1, ELEMENTS));
@@ -92,15 +93,34 @@ public class PlacesController {
 	}
 	
 	@GET
-	@RequestMapping(value="/places/cat/{type}/{name}")
-	public String placeDesc(@PathVariable("type") String type,@PathVariable("name") String name, Model model)
+	@RequestMapping(value="/places/{type}/{name}/{page}")
+	public String placeDesc(@PathVariable("type") String type,@PathVariable("name") String name,@PathVariable("page") int page, Model model)
 	{
 		Places place=placesService.findPlaceByName(name);
-		Likes like=placesService.findLikeByPlaceAndUser(name,UserUtilities.getLoggedUser());
+		if(UserUtilities.getLoggedUser()!=null)
+		{
+		Likes like=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
 		if(like!=null)
+		{
 		model.addAttribute("like",like.getLikes());
+		if(like.getComment()!=null)
+			model.addAttribute("text",like);
 		else
-			model.addAttribute("like",0);
+			model.addAttribute("text",new Likes());
+		}
+		else
+		{
+		model.addAttribute("like",0);
+		model.addAttribute("text",new Likes());
+		}
+		}
+		Page<Likes> pages=placesService.findByPlace(name,PageRequest.of(page-1, ELEMENTS));
+		int totalPages=pages.getTotalPages();
+		int currentPage=pages.getNumber();
+		List<Likes> rev=pages.getContent();
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("currentPage", currentPage+1);
+		model.addAttribute("rev", rev);
 		model.addAttribute("place", place);
 		model.addAttribute("email",new Email());
 		return "placesDesc";
@@ -111,7 +131,7 @@ public class PlacesController {
 	public String placeLike(@PathVariable("type") String type,@PathVariable("name") String name,Likes like, Model model)
 	{
 		
-		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,UserUtilities.getLoggedUser());
+		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
 		if(likeHandle==null)
 		{
 		placesService.saveLike(like,name);
@@ -123,22 +143,29 @@ public class PlacesController {
 		placesService.changeUp(placesService.findPlaceByName(name).getUp()+1, name);
 		placesService.changeDown(placesService.findPlaceByName(name).getDown()-1, name);
 		}
+		else if(likeHandle.getLikes()==0)
+		{
+			placesService.changeRate(1, likeHandle.getId());
+			placesService.changeUp(placesService.findPlaceByName(name).getUp()+1, name);
+		}
+		else if(likeHandle.getComment()!=null)
+		{
+			placesService.changeRate(0, likeHandle.getId());
+			placesService.changeUp(placesService.findPlaceByName(name).getUp()-1, name);
+		}
 		else
 		{
 		placesService.undoLike(likeHandle.getId());
 		placesService.changeUp(placesService.findPlaceByName(name).getUp()-1, name);
 		}
-		Places place=placesService.findPlaceByName(name);
-		model.addAttribute("place", place);
-		model.addAttribute("email",new Email());
-		return "placesDesc";
+		return "redirect:/places/{type}/{name}";
 	}
 	
 	@GET
 	@RequestMapping(value="/places/{type}/{name}/dislike")
 	public String placeDisLike(@PathVariable("type") String type,@PathVariable("name") String name,Likes like, Model model)
 	{
-		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,UserUtilities.getLoggedUser());
+		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
 		if(likeHandle==null)
 		{
 		placesService.saveDisLike(like,name);
@@ -150,15 +177,33 @@ public class PlacesController {
 		placesService.changeDown(placesService.findPlaceByName(name).getDown()+1, name);
 		placesService.changeUp(placesService.findPlaceByName(name).getUp()-1, name);
 		}
+		else if(likeHandle.getLikes()==0)
+		{
+			placesService.changeRate(1, likeHandle.getId());
+			placesService.changeUp(placesService.findPlaceByName(name).getDown()+1, name);
+		}
+		else if(likeHandle.getComment()!=null)
+		{
+			placesService.changeRate(0, likeHandle.getId());
+			placesService.changeUp(placesService.findPlaceByName(name).getDown()-1, name);
+		}
 		else
 		{
 		placesService.undoLike(likeHandle.getId());
 		placesService.changeDown(placesService.findPlaceByName(name).getDown()-1, name);
 		}
-		Places place=placesService.findPlaceByName(name);
-		model.addAttribute("place", place);
-		model.addAttribute("email",new Email());
-		return "placesDesc";
+		return "redirect:/places/{type}/{name}";
 	}
 	
+	@POST
+	@RequestMapping(value="/places/{type}/{name}/addcom")
+	public String addComment(@PathVariable("type") String type,@PathVariable("name") String name,Likes like, Model model)
+	{
+		Likes check=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
+		if(check==null)
+			placesService.saveComment(like, name);
+		else 
+			placesService.changeComment(like.getComment(), check.getId());
+		return "redirect:/places/{type}/{name}";
+	}
 }

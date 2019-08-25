@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kacper.bestplaces.emailSender.Email;
 import kacper.bestplaces.emailSender.EmailSender;
 import kacper.bestplaces.places.Places;
 import kacper.bestplaces.places.PlacesService;
@@ -60,13 +61,14 @@ public class RegisterController {
 		} else {
 			user.setActivationCode(AppdemoUtils.randomStringGenerator());
 			String content = "Wymagane potwierdzenie rejestracji. Kliknij w poniższy link aby aktywować konto: " +
-					"http://localhost:8080/activatelink/" + user.getActivationCode();
+					"http://bestplaces.serveo.net/activatelink/" + user.getActivationCode();
 			emailSender.sendEmail(user.getEmail(), "Potwierdzenie rejestracji", content);
 			userService.saveUser(user);
 			List<Places> egPlaces=placesService.getEgPlaces();
 			model.addAttribute("egPlaces", egPlaces);
-			model.addAttribute("message", messageSource.getMessage("user.register.success", null, locale));
+			model.addAttribute("message", messageSource.getMessage("user.register.success.email", null, locale));
 			model.addAttribute("user", new User());
+			model.addAttribute("email",new Email());
 			returnPage = "index";
 		}
 		
@@ -79,6 +81,9 @@ public class RegisterController {
 	{
 		userService.updateUserActivation(1, activationCode);
 		model.addAttribute("message", messageSource.getMessage("user.register.success", null,locale));
+		List<Places> egPlaces=placesService.getEgPlaces();
+		model.addAttribute("egPlaces", egPlaces);
+		model.addAttribute("email",new Email());
 		return "index";
 	}
 	

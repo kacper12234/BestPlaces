@@ -22,6 +22,9 @@ public class Likes {
 	@Column(name="likes")
 	private int likes;
 	
+	@Column(name="comment")
+	private String comment;
+	
 	public int getId() {
 		return id;
 	}
@@ -52,6 +55,14 @@ public class Likes {
 
 	public void setLikes(int likes) {
 		this.likes = likes;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	
 	
