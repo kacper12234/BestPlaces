@@ -78,7 +78,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </div>
 </sec:authorize>
 </div>
-<p><c:out value="${p.descrp }"/>"</p>
+<p><c:out value="${p.descrp }"/></p>
 <p><s:message code="place.author"/><c:out value="${p.author }"/></p>
 </div>
 </div>
