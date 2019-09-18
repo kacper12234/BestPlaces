@@ -15,8 +15,6 @@ public interface AdminService {
 	 User findUserById(int id);
 	 void updateUser(int id,int nrRoli,int active);
 	 Page<User> findAllSearch(String param, Pageable pg);
-	void insertInBatch(List<User> userList);
 	void saveAll(List<User> userList);
 	void deleteUserById(int id);
-	void deletePlace(String name);
 }

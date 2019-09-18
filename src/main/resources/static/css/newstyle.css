@@ -10,6 +10,7 @@ body
 
 .navbar{
 	font-size:42;
+	max-width:100vw;
 }
 
 .navbar li{
@@ -31,6 +32,7 @@ body
 
 .carousel-item{
 	height:100vh;
+	width:100%;
 }
 
 .carousel-caption
@@ -43,6 +45,7 @@ body
 	border-radius:0;
 	padding: 3rem 0 2rem;
 	margin-bottom:0;
+	width:100%;
 }
 
 h3.heading{
@@ -65,11 +68,23 @@ h3.heading{
 .row.no-padding [class*=col-]{
 	padding:0;
 }
-.newplaces img:hover{
+.newplaces:hover img{
 	transform: scale(1.1);
-	cursor:zoom-in;
+	-webkit-filter: brightness(70%);
 }
 
+.newplaces .content
+{
+	position: absolute;
+	top: 55%;
+	left: 5%;
+	align-items: flex-end;
+	color: transparent;
+}
+
+.newplaces:hover .content{
+	color: white;
+}
 
 .placeslist img{
 	width:100%;
@@ -109,6 +124,7 @@ footer a:hover{
 .newplaces{
 	overflow:hidden;
 	height:20vw;
+	max-width:103.8vw;
 }
 
 .narrow{
@@ -129,13 +145,13 @@ footer{
 
 hr.socket{
 	border-top: .2rem solid #666b71;
-	width:100%;
+	width:100vw;
 }
 
 #loginbg{
 	background-image: url(/resources/images/landscape.jpg);
 	width: 100%;
-	height: 100vh;
+	min-height: 100vh;
 }
 #profilbg{
 	background-image: url(/resources/images/feather.jpg);
@@ -145,12 +161,17 @@ hr.socket{
 #registerbg{
 	background-image: url(/resources/images/japan.jpg);
 	width: 100%;
-	height: 120vh;
+	min-height: 100vh;
 }
 #addplacebg{
 	background-image: url(/resources/images/sea.jpg);
 	width: 100%;
-	height: 100vh;
+	min-height: 100vh;
+}
+#editcred{
+	background-image: url(/resources/images/lavender.jpg);
+	width: 100%;
+	min-height: 100vh;
 }
 #bg{
 	background-color: #dfe2e6;
@@ -162,7 +183,7 @@ hr.socket{
 	margin: 2rem auto 0;
 	padding: 1rem 0;
 	min-width: 90vw;
-	width:100vh;
+	width:90vw;
 	max-width: 100vw;
 	background-color: #eceef0;
 }
@@ -219,7 +240,8 @@ hr.socket{
 
 #btn
 {
-	padding: 0px 50px;
+	text-align:center;
+	padding: .1rem;
 }
 
 .nav-link.dropdown-toggle

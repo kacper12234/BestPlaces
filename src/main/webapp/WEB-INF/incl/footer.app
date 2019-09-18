@@ -37,14 +37,14 @@
 <h1><s:message code="menu.name"/></h1>
 <strong><s:message code="contact.contact"/></strong>
 <sec:authorize access="hasRole('ANONYMOUS')">
-<p>kacpermochniej1999@gmail.com</p>
+<p><s:message code="mail.login"/></p>
 </sec:authorize>
 <sec:authorize access="isAuthenticated()">
-<p><a href="#contact" data-toggle="modal" data-target="#contact">kacpermochniej1999@gmail.com</a></p>
+<p><a href="#contact" data-toggle="modal" data-target="#contact"><s:message code="mail.send"/></a></p>
 </sec:authorize>
 </div>
 <hr class="socket">
-&copy;KACPER
+&copy;BestPlaces
 </div>
 </footer>
 </div>

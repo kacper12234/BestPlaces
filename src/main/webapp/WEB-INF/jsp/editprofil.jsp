@@ -22,55 +22,43 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 <body>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-
-<h2 align="center"><s:message code="profilEdit.pageName"/></h2>
-
-<sf:form id="usersForm" action="updateprofil" modelAttribute="user"
+<div class="container-fluid bg" id="editcred">
+<div class="row">
+	<div class="col-md-4 col-sm-4 col-xs-12"></div>
+		<div class="col-md-4 col-sm-4 col-xs-12">
+<sf:form id="usersForm" class="form-container" action="updateprofil" modelAttribute="user"
 		enctype="multipart/form-data" method="POST">
+<h2 align="center" style="margin-top: 5rem;"><s:message code="profilEdit.pageName"/></h2>
 
 		<sf:hidden path="id"/>
+<div class="form-group">
+<div><font color="red"><sf:errors path="name"/></font></div>
+				<label id="input" for="InputName"><s:message code="register.name"/></label>
+				<sf:input type="text" path="name" class="form-control" id="InputName"/>
+			</div>
 
-		<table width="500" border="0" cellpadding="4" cellspacing="1"
-			align="center">
+<div class="form-group">
+<div><font color="red"><sf:errors path="lastName"/></font></div>
+				<label id="input" for="InputLastName"><s:message code="register.lastName"/></label>
+				<sf:input path="lastName"
+						class="form-control" id="InputLastName" />
+</div>
 
-			<tr>
-				<td width="130" align="right" ><s:message code="register.name"/></td>
-				<td width="270" align="left"><sf:input path="name"
-						size="28" id="name" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center"><font color="red"><sf:errors path="name"/></font></td>
-			</tr>
+		<div class="form-group">
+<div><font color="red"><sf:errors path="email"/></font></div>
+				<label id="input" for="InputEmail"><s:message code="register.email"/></label>
+				<sf:input path="email" class="form-control" id="InputEmail" />
+</div>
 
-			<tr>
-				<td width="130" align="right"><s:message code="register.lastName"/></td>
-				<td width="270" align="left"><sf:input path="lastName"
-						size="28" /></td>
-			</tr>
-
-			<tr>
-				<td colspan="2" align="center"><font color="red"><sf:errors path="lastName"/></font></td>
-			</tr>
-
-			<tr>
-				<td width="130" align="right" ><s:message code="register.email"/></td>
-				<td width="270" align="left"><sf:input path="email" size="28" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" align="center"><font color="red"><sf:errors path="email"/></font></td>
-			</tr>
-
-			<tr>
-				<td colspan="2" align="center" bgcolor="#fff">
-					<input type="submit" value="<s:message code="button.save"/>" />
-					<input type="button" value="<s:message code="button.cancel"/>" 
-						onclick="window.location.href='${pageContext.request.contextPath}/'"/>
-				</td>
-			</tr>
-
-		</table>
-
+			<div id="btn">
+					<button type="submit" class="btn btn-success btn-lg"><s:message code="button.save"/></button>
+					<button type="button" class="btn btn-secondary btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/'">
+					<s:message code="button.cancel"/></button>
+</div>
 	</sf:form>
-
+</div>
+<div class="col-md-4 col-sm-4 col-xs-12"></div>
+</div>
+</div>
 </body>
 </html>

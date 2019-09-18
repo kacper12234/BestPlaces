@@ -10,7 +10,8 @@ public interface PlacesService {
 
 	public Places findPlaceByName(String name);
 	public Likes findLikeByPlaceAndUser(String place,String user);
-	public String getUsername();
+	public String getUsername(String mail);
+	public void updatePlace(String link,String newname,String newloc,String newdescrp);
 	public void changeRate(int status,int id);
 	public void undoLike(int id);
 	public void changeUp(int up,String name);
@@ -20,6 +21,8 @@ public interface PlacesService {
 	public void saveLike(Likes like,String name);
 	public void saveDisLike(Likes like,String name);
 	public void saveComment(Likes like,String name);
+	public void clearComment(int id);
+	void deletePlace(String name);
 	Page<Likes> findByPlace(String place,Pageable pg);
 	ArrayList<Places> getEgPlaces();
 	Page<Places> getPlaces(Pageable pg);

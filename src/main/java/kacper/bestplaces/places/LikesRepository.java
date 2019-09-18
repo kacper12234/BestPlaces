@@ -11,22 +11,25 @@ import org.springframework.stereotype.Repository;
 @Repository("likesRepository")
 public interface LikesRepository extends JpaRepository<Likes, Long>{
 
-	@Query(value="SELECT * FROM Likes l WHERE l.place=:place AND l.user=:user",nativeQuery = true)
+	@Query(value="SELECT * FROM likes WHERE place=:place AND user=:user",nativeQuery = true)
 	public Likes findByPlaceAndUser(@Param("place")String place,@Param("user")String user);
 	
 	@Query(value="SELECT * FROM likes WHERE comment IS NOT NULL AND place=:place",nativeQuery=true)
 	public Page<Likes> findByName(@Param("place")String place,Pageable pg);
 	
 	@Modifying
-	@Query(value="UPDATE Likes l SET l.likes=:status WHERE l.id=:id",nativeQuery=true)
+	@Query(value="UPDATE likes SET likes=:status WHERE id=:id",nativeQuery=true)
 	void changeRate(@Param("status")int status,@Param("id")int id);
 	
 	@Modifying
-	@Query(value="UPDATE Likes l SET l.comment=:comment WHERE l.id=:id",nativeQuery=true)
+	@Query(value="UPDATE likes SET comment=:comment WHERE id=:id",nativeQuery=true)
 	void changeComment(@Param("comment") String comment,@Param("id") int id);
 	
 	@Modifying
-	@Query(value="DELETE FROM Likes WHERE id=:id",nativeQuery=true)
+	@Query(value="DELETE FROM likes WHERE id=:id",nativeQuery=true)
 	void undoLike(@Param("id")int id);
 
+	@Query(value="UPDATE likes SET comment=:NULL WHERE id=:id",nativeQuery=true)
+	void clearComment(@Param("id")int id);
+	
 }

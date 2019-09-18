@@ -21,39 +21,30 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-
-<h2 align="center"><s:message code="button.zmianaHasla"/></h2>
-
-<p align="center">
-		<c:out value="${message }" />
-</p>
-
-<sf:form id="usersForm" action="updatepass" modelAttribute="user"
+<div class="container-fluid bg" id="editcred">
+<div class="row">
+	<div class="col-md-4 col-sm-4 col-xs-12"></div>
+		<div class="col-md-4 col-sm-4 col-xs-12">
+<sf:form id="usersForm" class="form-container" action="updatepass" modelAttribute="user"
 		enctype="multipart/form-data" method="POST">
-
+<h2 align="center"><s:message code="button.zmianaHasla"/></h2>
 		<sf:hidden path="email"/>
 
-		<table width="500" border="0" cellpadding="4" cellspacing="1"
-			align="center">
+			<div class="form-group">
+			<div><font color="red"><sf:errors path="newPassword"/></font></div>
+			<label id="input" for="newPass"><s:message code="passwordChange.newPassword"/></label>
+				<sf:input type="password" path="newPassword" />
+</div>
 
-			<tr>
-				<td width="130" align="right" ><s:message code="passwordChange.newPassword"/></td>
-				<td width="270" align="left"><sf:password path="newPassword" size="28" /></td>
-			</tr>
-
-			<tr>
-				<td colspan="2" align="center"><font color="red"><sf:errors path="newPassword"/></font></td>
-			</tr>
-
-			<tr>
-				<td colspan="2" align="center" bgcolor="#fff">
-					<input type="submit" value="<s:message code="button.zmianaHasla"/>" />
-					<input type="button" value="<s:message code="button.cancel"/>" 
-						onclick="window.location.href='${pageContext.request.contextPath}/profil'"/>
-				</td>
-			</tr>
-		</table>
-
-</sf:form>
+			<div id="btn">
+					<button type="submit" class="btn btn-success btn-lg"><s:message code="button.save"/></button>
+					<button type="button" class="btn btn-secondary btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/'">
+					<s:message code="button.cancel"/></button>
+</div>
+	</sf:form>
+</div>
+<div class="col-md-4 col-sm-4 col-xs-12"></div>
+</div>
+</div>
 </body>
 </html>

@@ -21,7 +21,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </head>
 <body>
 <%@include file="/WEB-INF/incl/menu.app" %>
-<h2><s:message code="profilEdit.pageName"/></h2>
+<h2 style="margin-top: 5rem;"><s:message code="profilEdit.pageName"/></h2>
 
 <p align="center">
 		<c:out value="${message }" />

@@ -18,7 +18,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/3c44ec830b.js"></script>
-<title><s:message code="menu.mainPage"/></title>
+<title><s:message code="menu.cat"/></title>
 <script type="text/javascript">
 function startSearch()
 {
@@ -39,7 +39,8 @@ function startSearchType()
 <%@include file="/WEB-INF/incl/menu.app" %>
 <c:set var="count" value="${recordStartCounter }"/>
 <div id="placeslist" class="container">
-<div class="input-group mb-4">
+<div class="row" style="padding: .1rem;">
+<div class="input-group mb-4" style="max-width: 65%; padding-left: .8rem;">
             <input id="searchloc" type="search" placeholder="<s:message code="places.search"/>" aria-describedby="button-addon5" class="form-control">
             <div class="input-group-append">
             <c:choose>
@@ -51,6 +52,28 @@ function startSearchType()
               </c:otherwise>
               </c:choose>
             </div>
+          </div>
+          <div class="dropdown" style="padding-left: .7rem;">
+<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<s:message code="place.sort"/>
+</button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+          <a class="dropdown-item" href="/places/sortUp/1"><s:message code="place.sort.up"/></a>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <a class="dropdown-item" href="/places/cat/${type}/sortUp/1"><s:message code="place.sort.up"/></a>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+          <a class="dropdown-item" href="/places/search/${search}/sortUp/1"><s:message code="place.sort.up"/></a>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <a class="dropdown-item" href="/places/cat/${type}/search/${search}/sortUp/1"><s:message code="place.sort.up"/></a>
+          </c:when>
+          </c:choose>
+          </div>
+          </div>
           </div>
           <c:if test="${empty placesList }">
           <h1 align="center"><s:message code="places.notfound"/></h1>

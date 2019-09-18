@@ -18,14 +18,14 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/3c44ec830b.js"></script>
-<title><s:message code="menu.mainPage"/></title>
+    <c:set var="p" value="${place }"/>
+<title><c:out value="${p.name }"/></title>
 </head>
 <body data-target="#navbarResponsive">
 <div id="bg">
 <%@include file="/WEB-INF/incl/menu.app" %>
 <c:set var="count" value="${recordStartCounter }"/>
 <div id="place" class="container">
-<c:set var="p" value="${place }"/>
 <div class="col-12">
 <h1><c:out value="${p.name }"/></h1>
 <h3><c:out value="${p.loc }"/></h3>
@@ -35,7 +35,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </div>
 <div class="col-lg">
 <div class="row">
-<div class="col">
+<div class="col-auto">
 <div class="row" style="margin: .5rem; ">
 <sec:authorize access="isAuthenticated()">
 <c:choose>
@@ -71,15 +71,45 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 <h5 style="margin: .7rem"><c:out value="${p.down }"/></h5>
 </div>
 </div>
+<div class="col" style="text-align: right;">
+<c:choose>
+<c:when test="${user == p.author }">
+<div class="dropdown">
+<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<s:message code="place.tool"/>
+</button>
+ <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+  <a class="dropdown-item" href="/places/${p.author }/${p.name }/edit">
+ <s:message code="place.mod"/>
+</a>
+ <a class="dropdown-item" href="/places/${p.author }/${p.name }/delete">
+ <s:message code="place.del"/>
+</a>
+</div>
+</div>
+</c:when>
+<c:otherwise>
 <sec:authorize access="hasRole('ROLE_ADMIN')">
-<div class="col-2" style="text-align: right;">
-<a href="/places/${p.type }/${p.name }/delete">
-<i class="fas fa-times fa-3x" style="color: red;"></i></a>
+<div class="dropdown">
+<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<s:message code="place.tool"/>
+</button>
+ <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+  <a class="dropdown-item" href="/places/${p.author }/${p.name }/edit">
+ <s:message code="place.mod"/>
+</a>
+ <a class="dropdown-item" href="/places/${p.author }/${p.name }/delete">
+ <s:message code="place.del"/>
+</a>
+</div>
 </div>
 </sec:authorize>
+</c:otherwise>
+</c:choose>
+</div>
 </div>
 <p><c:out value="${p.descrp }"/></p>
-<p><s:message code="place.author"/><c:out value="${p.author }"/></p>
+<p><s:message code="place.author"/><c:out value="${username }"/></p>
 </div>
 </div>
 <div id="comment" class="container">
@@ -98,16 +128,23 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </label>
 <sf:textarea path="comment" type="text" class="form-control" id="mycom"/>
 </div>
-<button type="submit" class="btn btn-success btn-lg">
 <c:choose>
 <c:when test="${empty text.comment}">
+<button type="submit" class="btn btn-success btn-lg">
 <s:message code="menu.add"/>
+</button>
 </c:when>
 <c:otherwise>
+<div class="row">
+<button type="submit" class="btn btn-success btn-lg">
 <s:message code="comment.mod"/>
+</button>
+<button type="button" class="btn btn-danger btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/places/${p.type }/${p.name }/delcom'">>
+<s:message code="comment.del"/>
+</button>
+</div>
 </c:otherwise>
 </c:choose>
-</button>
 </sf:form>
 </sec:authorize>
 <sec:authorize access="hasRole('ANONYMOUS')">

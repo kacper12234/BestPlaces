@@ -105,14 +105,6 @@ public class AdminPageController {
 		return "redirect:/admin/users/1";
 	}
 	
-	@DELETE
-	@RequestMapping(value="/places/{type}/{name}/delete")
-	public String deletePlace(@PathVariable("type") String type,@PathVariable("name") String name)
-	{
-		adminService.deletePlace(name);
-		return "redirect:/places/1";
-	}
-	
 	private Page<User> getAllUsersPageable(int page){
 		Page<User> pages=adminService.findAll(PageRequest.of(page, ELEMENTS));
 		for(User users:pages)

@@ -17,13 +17,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		return bcp;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Bean
 	public MultipartConfigElement multipartConfigElement()
 	{
 		MultipartConfigFactory factory=new MultipartConfigFactory();
-		factory.setMaxFileSize("5MB");
-		factory.setMaxRequestSize("5MB");
 		return factory.createMultipartConfig();
 	}
 }

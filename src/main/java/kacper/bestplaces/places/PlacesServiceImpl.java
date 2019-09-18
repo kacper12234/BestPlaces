@@ -34,9 +34,9 @@ public class PlacesServiceImpl implements PlacesService{
 	@Override
 	public void savePlace(Places place,MultipartFile mFile)
 	{
-		place.setAuthor(getUsername());
+		place.setAuthor(UserUtilities.getLoggedUser());
 		place.setId(placesRepository.count()+1);
-		String uploadDir = System.getProperty("user.dir")+"/target/classes/static/images/"+place.getAuthor();
+		String uploadDir = "/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+place.getAuthor();
 		File file;
 		try {
 			file = new File(uploadDir);
@@ -96,7 +96,7 @@ public class PlacesServiceImpl implements PlacesService{
 	@Override
 	public void saveLike(Likes like,String name) {
 		like.setName(name);
-		like.setUser(getUsername());
+		like.setUser(getUsername(UserUtilities.getLoggedUser()));
 		like.setLikes(1);
 		likesRepository.save(like);
 	}
@@ -104,7 +104,7 @@ public class PlacesServiceImpl implements PlacesService{
 	@Override
 	public void saveDisLike(Likes like,String name) {
 		like.setName(name);
-		like.setUser(getUsername());
+		like.setUser(getUsername(UserUtilities.getLoggedUser()));
 		like.setLikes(2);
 		likesRepository.save(like);
 	}
@@ -112,7 +112,7 @@ public class PlacesServiceImpl implements PlacesService{
 	@Override
 	public void saveComment(Likes like,String name) {
 		like.setName(name);
-		like.setUser(getUsername());
+		like.setUser(getUsername(UserUtilities.getLoggedUser()));
 		likesRepository.save(like);
 	}
 	
@@ -165,10 +165,31 @@ public class PlacesServiceImpl implements PlacesService{
 	}
 
 	@Override
-	public String getUsername() {
-		User u=userRepository.findByEmail(UserUtilities.getLoggedUser());
+	public String getUsername(String mail) {
+		User u=userRepository.findByEmail(mail);
 		String fname=u.getName()+" "+u.getLastName();
 		return fname;
 	}
 
+	@Override
+	public void updatePlace(String link, String newname, String newloc, String newdescrp) {
+		placesRepository.placeUpdate(link, newname, newloc, newdescrp);
+	}
+
+	@Override
+	public void deletePlace(String name) {
+		long i=placesRepository.findByName(name).getId()+1;
+		long count=placesRepository.count();
+		File r=new File("/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+placesRepository.findByName(name).getLink());
+		placesRepository.deletePlace(name);
+		r.delete();
+		for(;i<=count;i++)
+			placesRepository.updateId(i-1, i);
+	}
+
+	@Override
+	public void clearComment(int id) {
+		likesRepository.clearComment(id);
+	}
+	
 }

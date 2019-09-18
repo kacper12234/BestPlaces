@@ -65,7 +65,7 @@ public class ProfilController {
 		else
 		{
 			userService.updateUserPassword(user.getNewPassword(), user.getEmail());
-			returnPage="editPassword";
+			returnPage="index";
 			model.addAttribute("message", messageSource.getMessage("passwordChange.success", null, locale));
 		}
 		

@@ -61,7 +61,7 @@ public class RegisterController {
 		} else {
 			user.setActivationCode(AppdemoUtils.randomStringGenerator());
 			String content = "Wymagane potwierdzenie rejestracji. Kliknij w poniższy link aby aktywować konto: " +
-					"http://bestplaces.serveo.net/activatelink/" + user.getActivationCode();
+					"https://bestplaces.azurewebsites.net/activatelink/" + user.getActivationCode();
 			emailSender.sendEmail(user.getEmail(), "Potwierdzenie rejestracji", content);
 			userService.saveUser(user);
 			List<Places> egPlaces=placesService.getEgPlaces();

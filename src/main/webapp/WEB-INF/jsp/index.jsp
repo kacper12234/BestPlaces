@@ -110,6 +110,10 @@ $('#regSuccess').modal()
 	<div class="newplaces">
 	<a href="/places/<c:out value="${p.type }"/>/<c:out value="${p.name }/1"/>">
 	<img src="/resources/images/<c:out value="${p.author }"/>/<c:out value="${p.link }"/>">
+	<div class="content">
+	<h2><c:out value="${p.name }"/></h2>
+	<h4><c:out value="${p.loc }"/></h4>
+	</div>
 	</a>
 	</div>
 	</div>

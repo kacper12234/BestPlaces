@@ -1,5 +1,8 @@
 package kacper.bestplaces.places;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -12,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import kacper.bestplaces.emailSender.Email;
 import kacper.bestplaces.utilities.UserUtilities;
 
@@ -26,19 +28,29 @@ public class PlacesController {
 	@Autowired
 	private PlacesService placesService;
 	
+	class SortbyLikes implements Comparator<Places>
+	{
+		@Override
+		public int compare(Places o1, Places o2) {
+			return o2.getUp()-o1.getUp();
+		}
+	}
+	
 	@GET
 	@RequestMapping(value="/places/{page}")
 	public String places(@PathVariable("page") int page, Model model)
 	{
 		Page<Places> pages=placesService.getPlaces(PageRequest.of(page-1, ELEMENTS));
-		int totalPages=pages.getTotalPages();
-		int currentPage=pages.getNumber();
-		List<Places> placesList=pages.getContent();
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("currentPage", currentPage+1);
-		model.addAttribute("placesList",placesList);
-		model.addAttribute("recordStartCounter", currentPage*ELEMENTS);
-		model.addAttribute("email",new Email());
+		placesShow(pages,model);
+		return "places";
+	}
+	
+	@GET
+	@RequestMapping(value="/places/sortUp/{page}")
+	public String placesSortbyUp(@PathVariable("page") int page, Model model)
+	{
+		Page<Places> pages=placesService.getPlaces(PageRequest.of(page-1, ELEMENTS));
+		placesShowSort(pages,model);
 		return "places";
 	}
 	
@@ -47,15 +59,19 @@ public class PlacesController {
 	public String placesType(@PathVariable("page") int page,@PathVariable("type") String type, Model model)
 	{
 		Page<Places> pages=placesService.getPlacesByType(type,PageRequest.of(page-1, ELEMENTS));
-		int totalPages=pages.getTotalPages();
-		int currentPage=pages.getNumber();
-		List<Places> placesList=pages.getContent();
+		placesShow(pages,model);
 		model.addAttribute("type", type);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("currentPage", currentPage+1);
-		model.addAttribute("placesList",placesList);
-		model.addAttribute("recordStartCounter", currentPage*ELEMENTS);
-		model.addAttribute("email",new Email());
+		return "places";
+	}
+	
+	
+	@GET
+	@RequestMapping(value="/places/cat/{type}/sortUp/{page}")
+	public String placesTypeSortbyUp(@PathVariable("page") int page,@PathVariable("type") String type, Model model)
+	{
+		Page<Places> pages=placesService.getPlacesByType(type,PageRequest.of(page-1, ELEMENTS));
+		placesShowSort(pages,model);
+		model.addAttribute("type", type);
 		return "places";
 	}
 	
@@ -64,14 +80,17 @@ public class PlacesController {
 	public String placesInLoc(@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
 	{
 		Page<Places> pages=placesService.findInLoc(param,PageRequest.of(page-1, ELEMENTS));
-		int totalPages=pages.getTotalPages();
-		int currentPage=pages.getNumber();
-		List<Places> placesList=pages.getContent();
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("currentPage", currentPage+1);
-		model.addAttribute("placesList",placesList);
-		model.addAttribute("recordStartCounter", currentPage*ELEMENTS);
-		model.addAttribute("email",new Email());
+		placesShow(pages,model);
+		model.addAttribute("search", param);
+		return "places";
+	}
+	
+	@GET
+	@RequestMapping(value="/places/search/{searchLoc}/sortUp/{page}")
+	public String placesInLocSortbyUp(@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
+	{
+		Page<Places> pages=placesService.findInLoc(param,PageRequest.of(page-1, ELEMENTS));
+		placesShowSort(pages,model);
 		return "places";
 	}
 	
@@ -80,16 +99,46 @@ public class PlacesController {
 	public String placesInLoc(@PathVariable("type")String type,@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
 	{
 		Page<Places> pages=placesService.findPlacesTypeInLoc(param, type,PageRequest.of(page-1, ELEMENTS));
+		placesShow(pages,model);
+		model.addAttribute("type", type);
+		model.addAttribute("search", true);
+		return "places";
+	}
+	
+	@GET
+	@RequestMapping(value="/places/cat/{type}/search/{searchLoc}/sortUp/{page}")
+	public String placesInLocSortbyUp(@PathVariable("type")String type,@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
+	{
+		Page<Places> pages=placesService.findPlacesTypeInLoc(param, type,PageRequest.of(page-1, ELEMENTS));
+		placesShowSort(pages,model);
+		model.addAttribute("type", type);
+		return "places";
+	}
+	
+	public void placesShowSort(Page<Places> pages,Model model)
+	{
 		int totalPages=pages.getTotalPages();
 		int currentPage=pages.getNumber();
-		List<Places> placesList=pages.getContent();
-		model.addAttribute("type", type);
+		ArrayList<Places> placesList=new ArrayList<Places> (pages.getContent());
+		Collections.sort(placesList,new SortbyLikes());
 		model.addAttribute("totalPages", totalPages);
 		model.addAttribute("currentPage", currentPage+1);
 		model.addAttribute("placesList",placesList);
 		model.addAttribute("recordStartCounter", currentPage*ELEMENTS);
 		model.addAttribute("email",new Email());
-		return "places";
+	}
+	
+	public void placesShow(Page<Places> pages,Model model)
+	{
+		int totalPages=pages.getTotalPages();
+		int currentPage=pages.getNumber();
+		ArrayList<Places> placesList=new ArrayList<Places> (pages.getContent());
+		Collections.reverse(placesList);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("currentPage", currentPage+1);
+		model.addAttribute("placesList",placesList);
+		model.addAttribute("recordStartCounter", currentPage*ELEMENTS);
+		model.addAttribute("email",new Email());
 	}
 	
 	@GET
@@ -99,7 +148,8 @@ public class PlacesController {
 		Places place=placesService.findPlaceByName(name);
 		if(UserUtilities.getLoggedUser()!=null)
 		{
-		Likes like=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
+			model.addAttribute("user",UserUtilities.getLoggedUser());
+		Likes like=placesService.findLikeByPlaceAndUser(name,placesService.getUsername(UserUtilities.getLoggedUser()));
 		if(like!=null)
 		{
 		model.addAttribute("like",like.getLikes());
@@ -123,6 +173,7 @@ public class PlacesController {
 		model.addAttribute("rev", rev);
 		model.addAttribute("place", place);
 		model.addAttribute("email",new Email());
+		model.addAttribute("username",placesService.getUsername(place.getAuthor()));
 		return "placesDesc";
 	}
 	
@@ -131,7 +182,7 @@ public class PlacesController {
 	public String placeLike(@PathVariable("type") String type,@PathVariable("name") String name,Likes like, Model model)
 	{
 		
-		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
+		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,placesService.getUsername(UserUtilities.getLoggedUser()));
 		if(likeHandle==null)
 		{
 		placesService.saveLike(like,name);
@@ -158,14 +209,14 @@ public class PlacesController {
 		placesService.undoLike(likeHandle.getId());
 		placesService.changeUp(placesService.findPlaceByName(name).getUp()-1, name);
 		}
-		return "redirect:/places/{type}/{name}";
+		return "redirect:/places/{type}/{name}/1";
 	}
 	
 	@GET
 	@RequestMapping(value="/places/{type}/{name}/dislike")
 	public String placeDisLike(@PathVariable("type") String type,@PathVariable("name") String name,Likes like, Model model)
 	{
-		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
+		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,placesService.getUsername(UserUtilities.getLoggedUser()));
 		if(likeHandle==null)
 		{
 		placesService.saveDisLike(like,name);
@@ -192,18 +243,29 @@ public class PlacesController {
 		placesService.undoLike(likeHandle.getId());
 		placesService.changeDown(placesService.findPlaceByName(name).getDown()-1, name);
 		}
-		return "redirect:/places/{type}/{name}";
+		return "redirect:/places/{type}/{name}/1";
 	}
 	
 	@POST
 	@RequestMapping(value="/places/{type}/{name}/addcom")
 	public String addComment(@PathVariable("type") String type,@PathVariable("name") String name,Likes like, Model model)
 	{
-		Likes check=placesService.findLikeByPlaceAndUser(name,placesService.getUsername());
+		Likes check=placesService.findLikeByPlaceAndUser(name,placesService.getUsername(UserUtilities.getLoggedUser()));
 		if(check==null)
 			placesService.saveComment(like, name);
 		else 
 			placesService.changeComment(like.getComment(), check.getId());
-		return "redirect:/places/{type}/{name}";
+		return "redirect:/places/{type}/{name}/1";
+	}
+	
+	@RequestMapping(value="/places/{type}/{name}/delcom")
+	public String delComment(@PathVariable("type") String type,@PathVariable("name") String name,Likes like)
+	{
+		Likes likeHandle=placesService.findLikeByPlaceAndUser(name,placesService.getUsername(UserUtilities.getLoggedUser()));
+		if(likeHandle.getLikes()!=0)
+			placesService.clearComment(likeHandle.getId());
+		else
+		placesService.undoLike(likeHandle.getId());
+		return "redirect:/places/{type}/{name}/1";
 	}
 }
