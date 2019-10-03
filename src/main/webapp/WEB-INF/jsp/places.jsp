@@ -34,7 +34,9 @@ function startSearchType()
 }
 </script>
 </head>
-<body data-target="#navbarResponsive">
+<body data-target="#navbarResponsive" onload="loading()">
+<%@include file="/WEB-INF/incl/loading.app" %>
+<div id="page">
 <div id="bg">
 <%@include file="/WEB-INF/incl/menu.app" %>
 <c:set var="count" value="${recordStartCounter }"/>
@@ -53,24 +55,46 @@ function startSearchType()
               </c:choose>
             </div>
           </div>
-          <div class="dropdown" style="padding-left: .7rem;">
+          <div class="dropdown" style="padding-left: 1.5vw;">
 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 <s:message code="place.sort"/>
 </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <c:choose>
+          <c:when test="${not sort }">
+          <a class="dropdown-item active"><s:message code="place.sort.rate"/></a>
+          <c:choose>
           <c:when test="${empty type and empty search}">
-          <a class="dropdown-item" href="/places/sortUp/1"><s:message code="place.sort.up"/></a>
+          <a class="dropdown-item" href="/places/sortDate/1"><s:message code="place.sort.date"/></a>
           </c:when>
           <c:when test="${not empty type and empty search }">
-           <a class="dropdown-item" href="/places/cat/${type}/sortUp/1"><s:message code="place.sort.up"/></a>
+           <a class="dropdown-item" href="/places/cat/${type}/sortDate/1"><s:message code="place.sort.date"/></a>
           </c:when>
           <c:when test="${not empty search and empty type}">
-          <a class="dropdown-item" href="/places/search/${search}/sortUp/1"><s:message code="place.sort.up"/></a>
+          <a class="dropdown-item" href="/places/search/${search}/sortDate/1"><s:message code="place.sort.date"/></a>
           </c:when>
           <c:when test="${not empty search and not empty type }">
-          <a class="dropdown-item" href="/places/cat/${type}/search/${search}/sortUp/1"><s:message code="place.sort.up"/></a>
+          <a class="dropdown-item" href="/places/cat/${type}/search/${search}/sortDate/1"><s:message code="place.sort.date"/></a>
           </c:when>
+          </c:choose>
+          </c:when>
+          <c:otherwise>
+          <a class="dropdown-item active"><s:message code="place.sort.date"/></a>
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+          <a class="dropdown-item" href="/places/1"><s:message code="place.sort.rate"/></a>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <a class="dropdown-item" href="/places/cat/${type}/1"><s:message code="place.sort.rate"/></a>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+          <a class="dropdown-item" href="/places/search/${search}/1"><s:message code="place.sort.rate"/></a>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <a class="dropdown-item" href="/places/cat/${type}/search/${search}/1"><s:message code="place.sort.rate"/></a>
+          </c:when>
+          </c:choose>
+          </c:otherwise>
           </c:choose>
           </div>
           </div>
@@ -84,7 +108,7 @@ function startSearchType()
 <a href="/places/${p.type }/${p.name }/1">
 <div class="row">
 <div class="col-md-4">
-<img src="/resources/images/<c:out value="${p.author }"/>/<c:out value="${p.link }"/>">
+<img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>1.jpg">
 </div>
 <div class="col-md">
 <div class="row">
@@ -159,7 +183,21 @@ function startSearchType()
 </div>
 </c:if>
 </div>
+<!-- <div class="ad">
+<h3><s:message code="ad"/></h3>
+	 <script type="text/javascript">
+	atOptions = {
+		'key' : 'd3372883c2e0010919ffc443be2e2547',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+	document.write('<scr' + 'ipt type="text/javascript" src="http' + (location.protocol === 'https:' ? 's' : '') + '://www.bcloudhost.com/d3372883c2e0010919ffc443be2e2547/invoke.js"></scr' + 'ipt>');
+</script>
+</div> -->
 </div>
 <%@include file="/WEB-INF/incl/footer.app" %>
+</div>
 </body>
 </html>

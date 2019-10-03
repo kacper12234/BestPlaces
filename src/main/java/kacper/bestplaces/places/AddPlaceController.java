@@ -1,5 +1,6 @@
 package kacper.bestplaces.places;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,7 +44,7 @@ public class AddPlaceController {
 	
 	@POST
 	@RequestMapping(value="/placeadded")
-	public String addPlaceAction(Places places,@RequestParam("filename") MultipartFile mFile, BindingResult result, Model model, Locale locale) {
+	public String addPlaceAction(Places places,@RequestParam("filename[]") MultipartFile[] mFile, BindingResult result, Model model, Locale locale) {
 		String returnPage=null;
 		Places placeExist=placesService.findPlaceByName(places.getName());
 		new AddPlaceValidator().validatePlaceExist(placeExist, result);
@@ -70,14 +71,13 @@ public class AddPlaceController {
 		@PreAuthorize("#mail == authentication.name or hasRole('ROLE_ADMIN')")
 		public String editPlaceAction(Places place,@PathVariable("mail") String mail,@PathVariable("name") String name, Model model) {
 		model.addAttribute("place", placesService.findPlaceByName(name));
-		place.setLink(placesService.findPlaceByName(name).getLink());
 		return "editplace";
 		}
 		
 		@DELETE
 		@RequestMapping(value="/places/{mail}/{name}/delete")
 		@PreAuthorize("#mail == authentication.name or hasRole('ROLE_ADMIN')")
-		public String deletePlace(@PathVariable("mail") String mail,@PathVariable("name") String name)
+		public String deletePlace(@PathVariable("mail") String mail,@PathVariable("name") String name) throws IOException
 		{
 			placesService.deletePlace(name);
 			return "redirect:/places/1";
@@ -88,7 +88,7 @@ public class AddPlaceController {
 		public String updateplace(Places place)
 		{
 		
-				placesService.updatePlace(place.getLink(), place.getName(), place.getLoc(), place.getDescrp());
+				placesService.updatePlace(place.getId(), place.getName(), place.getLoc(), place.getDescrp());
 				return "redirect:/places/1";
 		}
 }

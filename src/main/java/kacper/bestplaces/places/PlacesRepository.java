@@ -16,8 +16,8 @@ public interface PlacesRepository extends JpaRepository<Places, Long>{
 	public Page<Places> findByType(String type,Pageable pg);
 	
 	@Modifying
-	@Query(value="UPDATE places SET name=:newname, loc=:newloc, descrp=:newdescrp WHERE link=:name", nativeQuery=true)
-	void placeUpdate(@Param("name") String name, @Param("newname") String newname, @Param("newloc") String newloc, @Param("newdescrp") String newdescrp);
+	@Query(value="UPDATE places SET name=:newname, loc=:newloc, descrp=:newdescrp WHERE id=:id", nativeQuery=true)
+	void placeUpdate(@Param("id") long id, @Param("newname") String newname, @Param("newloc") String newloc, @Param("newdescrp") String newdescrp);
 	
 	@Modifying
 	@Query(value="UPDATE places SET up=:up WHERE name=:name", nativeQuery=true)

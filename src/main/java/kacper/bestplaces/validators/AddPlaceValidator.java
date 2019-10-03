@@ -23,7 +23,7 @@ public class AddPlaceValidator implements Validator{
 		ValidationUtils.rejectIfEmpty(errors, "descrp", "error.placeDescrp.empty");
 	}
 	
-	public void validateFile(MultipartFile mFile,Errors error)
+	public void validateFile(MultipartFile[] mFile,Errors error)
 	{
 		if(mFile==null)
 			error.rejectValue("filename", "error.placeImg.empty");

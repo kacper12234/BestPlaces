@@ -19,7 +19,9 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <title><s:message code="menu.register"/></title>
 </head>
-<body>
+<body onload="loading()">
+<%@include file="/WEB-INF/incl/loading.app" %>
+<div id="page">
 <%@include file="/WEB-INF/incl/menu.app" %>
 
 <div class="container-fluid bg" id="registerbg">
@@ -59,7 +61,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 		<div class="col-md-4 col-sm-4 col-xs-12"></div>
 			</div>
 		</div>
-
+</div>
 			
 	
 </body>

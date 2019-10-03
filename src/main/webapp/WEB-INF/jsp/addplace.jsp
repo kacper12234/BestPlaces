@@ -17,11 +17,21 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
+   <script type="text/javascript">
+            	$(document).ready(function() { 
+                $('#placeForm').on("submit", function(){
+                    	$('.progress').css('display','block');         	
+                });
+            });
+        </script> 
 <title><s:message code="addplace.add"/></title>
 </head>
-<body>
+<body onload="loading()">
+<%@include file="/WEB-INF/incl/loading.app" %>
+<div id="page">
 <%@include file="/WEB-INF/incl/menu.app" %>
-
 <div class="container-fluid bg" id="addplacebg">
 	<div class="row">
 	<div class="col-md-4 col-sm-4 col-xs-12"></div>
@@ -37,6 +47,9 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     <option value="<s:message code="menu.cat1"/>"><s:message code="menu.cat1"/></option>
     <option value="<s:message code="menu.cat2"/>"><s:message code="menu.cat2"/></option>
     <option value="<s:message code="menu.cat3"/>"><s:message code="menu.cat3"/></option>
+    <option value="<s:message code="menu.cat4"/>"><s:message code="menu.cat4"/></option>
+    <option value="<s:message code="menu.cat5"/>"><s:message code="menu.cat5"/></option>
+    <option value="<s:message code="menu.cat6"/>"><s:message code="menu.cat6"/></option>
   </sf:select>
 		</div>
 		<div class="form-group">
@@ -59,9 +72,12 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 	<div class="form-group">
 		<div class="custom-file">
 		<label class="custom-file-label" for="inputImage"><s:message code="addplace.link"/></label>
-    <input type="file" name="filename" accept=".jpg, .jpeg" class="custom-file-input" id="inputImage"/>
+    <input type="file" name="filename[]" accept=".jpg" class="custom-file-input" id="inputImage" multiple/>
     </div>
     </div>
+    <div class="progress">
+  <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%;"><s:message code="file.upload.show"/></div>
+</div>
     <div id="btn">
 		<button type="submit" class="btn btn-success btn-lg"><s:message code="menu.add"/></button>
 					<button type="button" class="btn btn-secondary btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/'">
@@ -73,8 +89,17 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 		<div class="col-md-4 col-sm-4 col-xs-12"></div>
 			</div>
 		</div>
-
-			
+</div>
+			    <script type="text/javascript">
+$(".custom-file-input").on("change", function() {
+  var count=$(this)[0].files.length;
+  if(count>1)
+	  var fileName=count+' files selected';
+  else
+	  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+</script>
 	
 </body>
 </html>

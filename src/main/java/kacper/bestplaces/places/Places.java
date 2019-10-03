@@ -34,16 +34,16 @@ public class Places {
 	@NotNull
 	private String author;
 	
-	@Column(name="link")
-	@NotNull
-	private String link;
-	
 	@Column(name="up")
 	private int up;
 	
 	@Column(name="down")
 	private int down;
 	
+	@Column(name="count")
+	@NotNull
+	private int count;
+
 	public String getType() {
 		return type;
 	}
@@ -84,15 +84,6 @@ public class Places {
 		this.author = author;
 	}
 
-	public void setLink(String link) {
-		this.link = link;
-	}
-
-	public String getLink() {
-		return link;
-	}
-
-
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -115,6 +106,14 @@ public class Places {
 
 	public long getId() {
 		return id;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 	

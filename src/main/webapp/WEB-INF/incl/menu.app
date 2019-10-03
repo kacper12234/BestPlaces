@@ -22,6 +22,9 @@
           <a class="dropdown-item" href="/places/cat/Natura/1"><s:message code="menu.cat1"/></a>
           <a class="dropdown-item" href="/places/cat/Restauracje/1"><s:message code="menu.cat2"/></a>
           <a class="dropdown-item" href="/places/cat/Zabytki/1"><s:message code="menu.cat3"/></a>
+          <a class="dropdown-item" href="/places/cat/Hotele/1"><s:message code="menu.cat4"/></a>
+          <a class="dropdown-item" href="/places/cat/Rozrywka/1"><s:message code="menu.cat5"/></a>
+          <a class="dropdown-item" href="/places/cat/Inne/1"><s:message code="menu.cat6"/></a>
         </div>
       </li>
 		<sec:authorize access="hasRole('ANONYMOUS')">

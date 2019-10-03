@@ -46,11 +46,12 @@ public class PlacesController {
 	}
 	
 	@GET
-	@RequestMapping(value="/places/sortUp/{page}")
-	public String placesSortbyUp(@PathVariable("page") int page, Model model)
+	@RequestMapping(value="/places/sortDate/{page}")
+	public String placesSortbyDate(@PathVariable("page") int page, Model model)
 	{
 		Page<Places> pages=placesService.getPlaces(PageRequest.of(page-1, ELEMENTS));
 		placesShowSort(pages,model);
+		model.addAttribute("sort", true);
 		return "places";
 	}
 	
@@ -66,12 +67,13 @@ public class PlacesController {
 	
 	
 	@GET
-	@RequestMapping(value="/places/cat/{type}/sortUp/{page}")
-	public String placesTypeSortbyUp(@PathVariable("page") int page,@PathVariable("type") String type, Model model)
+	@RequestMapping(value="/places/cat/{type}/sortDate/{page}")
+	public String placesTypeSortbyDate(@PathVariable("page") int page,@PathVariable("type") String type, Model model)
 	{
 		Page<Places> pages=placesService.getPlacesByType(type,PageRequest.of(page-1, ELEMENTS));
 		placesShowSort(pages,model);
 		model.addAttribute("type", type);
+		model.addAttribute("sort", true);
 		return "places";
 	}
 	
@@ -86,11 +88,12 @@ public class PlacesController {
 	}
 	
 	@GET
-	@RequestMapping(value="/places/search/{searchLoc}/sortUp/{page}")
-	public String placesInLocSortbyUp(@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
+	@RequestMapping(value="/places/search/{searchLoc}/sortDate/{page}")
+	public String placesInLocSortbyDate(@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
 	{
 		Page<Places> pages=placesService.findInLoc(param,PageRequest.of(page-1, ELEMENTS));
 		placesShowSort(pages,model);
+		model.addAttribute("sort", true);
 		return "places";
 	}
 	
@@ -106,16 +109,17 @@ public class PlacesController {
 	}
 	
 	@GET
-	@RequestMapping(value="/places/cat/{type}/search/{searchLoc}/sortUp/{page}")
-	public String placesInLocSortbyUp(@PathVariable("type")String type,@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
+	@RequestMapping(value="/places/cat/{type}/search/{searchLoc}/sortDate/{page}")
+	public String placesInLocSortbyDate(@PathVariable("type")String type,@PathVariable("searchLoc") String param, @PathVariable("page") int page, Model model)
 	{
 		Page<Places> pages=placesService.findPlacesTypeInLoc(param, type,PageRequest.of(page-1, ELEMENTS));
 		placesShowSort(pages,model);
 		model.addAttribute("type", type);
+		model.addAttribute("sort", true);
 		return "places";
 	}
 	
-	public void placesShowSort(Page<Places> pages,Model model)
+	public void placesShow(Page<Places> pages,Model model)
 	{
 		int totalPages=pages.getTotalPages();
 		int currentPage=pages.getNumber();
@@ -128,7 +132,7 @@ public class PlacesController {
 		model.addAttribute("email",new Email());
 	}
 	
-	public void placesShow(Page<Places> pages,Model model)
+	public void placesShowSort(Page<Places> pages,Model model)
 	{
 		int totalPages=pages.getTotalPages();
 		int currentPage=pages.getNumber();
@@ -139,6 +143,7 @@ public class PlacesController {
 		model.addAttribute("placesList",placesList);
 		model.addAttribute("recordStartCounter", currentPage*ELEMENTS);
 		model.addAttribute("email",new Email());
+		model.addAttribute("sort", true);
 	}
 	
 	@GET

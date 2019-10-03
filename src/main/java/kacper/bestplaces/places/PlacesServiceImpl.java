@@ -1,12 +1,14 @@
 package kacper.bestplaces.places;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,21 +34,26 @@ public class PlacesServiceImpl implements PlacesService{
 	private UserRepository userRepository;
 	
 	@Override
-	public void savePlace(Places place,MultipartFile mFile)
+	public void savePlace(Places place,MultipartFile[] mFile)
 	{
 		place.setAuthor(UserUtilities.getLoggedUser());
 		place.setId(placesRepository.count()+1);
-		String uploadDir = "/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+place.getAuthor();
+		String uploadDir="/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+place.getName();
 		File file;
 		try {
 			file = new File(uploadDir);
 			if (!file.exists()) {
 				file.mkdir();
 			}
-			Path fileAndPath = Paths.get(uploadDir,mFile.getOriginalFilename());
-			Files.write(fileAndPath, mFile.getBytes());
-			file = new File(fileAndPath.toString());	
-		place.setLink(file.getName());
+			int i=0;
+			for(MultipartFile m: mFile)
+			{
+				i++;
+			Path fileAndPath = Paths.get(uploadDir,place.getName()+i+".jpg");
+			Files.write(fileAndPath, m.getBytes());
+			file = new File(fileAndPath.toString());
+			}
+			place.setCount(i);
 			placesRepository.save(place);
 		}
 		catch(Exception e)
@@ -172,17 +179,17 @@ public class PlacesServiceImpl implements PlacesService{
 	}
 
 	@Override
-	public void updatePlace(String link, String newname, String newloc, String newdescrp) {
-		placesRepository.placeUpdate(link, newname, newloc, newdescrp);
+	public void updatePlace(long id, String newname, String newloc, String newdescrp) {
+		placesRepository.placeUpdate(id, newname, newloc, newdescrp);
 	}
 
 	@Override
-	public void deletePlace(String name) {
+	public void deletePlace(String name) throws IOException {
 		long i=placesRepository.findByName(name).getId()+1;
 		long count=placesRepository.count();
-		File r=new File("/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+placesRepository.findByName(name).getLink());
+		File r=new File("/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+name);
 		placesRepository.deletePlace(name);
-		r.delete();
+		FileUtils.deleteDirectory(r);
 		for(;i<=count;i++)
 			placesRepository.updateId(i-1, i);
 	}

@@ -18,7 +18,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
-window.onload=window.onresize = function()
+function resize()
 {
     var size=document.getElementsByClassName("newplaces");
     for(var i=0;i<size.length;i++)
@@ -27,11 +27,14 @@ window.onload=window.onresize = function()
     else
     	size[i].style.height='20vw';
 };
+window.addEventListener("load",resize,false);
+window.addEventListener("resize",resize,false);
     </script>
 <title><s:message code="menu.mainPage"/></title>
 </head>
-<body data-target="#navbarResponsive">
-
+<body data-target="#navbarResponsive" onload="loading()">
+<%@include file="/WEB-INF/incl/loading.app" %>
+<div id="page">
 <div id="home">
 <%@include file="/WEB-INF/incl/menu.app" %>
 
@@ -108,8 +111,8 @@ $('#regSuccess').modal()
 	<c:forEach var="p" items="${egPlaces }">
 	<div class="col-sm-4">
 	<div class="newplaces">
-	<a href="/places/<c:out value="${p.type }"/>/<c:out value="${p.name }/1"/>">
-	<img src="/resources/images/<c:out value="${p.author }"/>/<c:out value="${p.link }"/>">
+<a href="/places/${p.type }/${p.name }/1">
+	<img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>1.jpg">
 	<div class="content">
 	<h2><c:out value="${p.name }"/></h2>
 	<h4><c:out value="${p.loc }"/></h4>
@@ -130,7 +133,21 @@ $('#regSuccess').modal()
 		</div>
 	</div>
 </div> <!-- End jumbotron -->
+<!--  <div class="ad">
+<h3><s:message code="ad"/></h3>
+	 <script type="text/javascript">
+	atOptions = {
+		'key' : 'd3372883c2e0010919ffc443be2e2547',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+	document.write('<scr' + 'ipt type="text/javascript" src="http' + (location.protocol === 'https:' ? 's' : '') + '://www.bcloudhost.com/d3372883c2e0010919ffc443be2e2547/invoke.js"></scr' + 'ipt>');
+</script>
+</div> -->
 </div> <!-- End newplaces section -->
 <%@include file="/WEB-INF/incl/footer.app" %>
+</div>
 </body>
 </html>

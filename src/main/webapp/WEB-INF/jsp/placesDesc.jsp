@@ -21,7 +21,9 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     <c:set var="p" value="${place }"/>
 <title><c:out value="${p.name }"/></title>
 </head>
-<body data-target="#navbarResponsive">
+<body data-target="#navbarResponsive" onload="loading()">
+<%@include file="/WEB-INF/incl/loading.app" %>
+<div id="page">
 <div id="bg">
 <%@include file="/WEB-INF/incl/menu.app" %>
 <c:set var="count" value="${recordStartCounter }"/>
@@ -31,7 +33,31 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 <h3><c:out value="${p.loc }"/></h3>
 </div>
 <div class="col-sm-12">
-<img src="/resources/images/<c:out value="${p.author }"/>/<c:out value="${p.link }"/>">
+<c:choose>
+<c:when test="${p.count == 1 }">
+<img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>1.jpg">
+</c:when>
+<c:otherwise>
+<div id="plimages" class="carousel slide">
+	<ol class="carousel-indicators">
+		<li data-target="#plimages" data-slide-to="0" class="active"/>
+		<c:forEach var="i" begin="1" end="${p.count }">
+		<li data-target="#plimages" data-slide-to="${i }" />		
+		</c:forEach>
+	</ol>
+	<div class="carousel-inner" role="listbox">
+	<div class="carousel-item active">
+		<img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>1.jpg">
+	</div>
+	<c:forEach var="i" begin="2" end="${p.count }">
+	<div class="carousel-item">
+		<img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>${i }.jpg">
+	</div>
+	</c:forEach>
+	</div>
+	</div>
+</c:otherwise>
+</c:choose>
 </div>
 <div class="col-lg">
 <div class="row">
@@ -139,7 +165,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 <button type="submit" class="btn btn-success btn-lg">
 <s:message code="comment.mod"/>
 </button>
-<button type="button" class="btn btn-danger btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/places/${p.type }/${p.name }/delcom'">>
+<button type="button" class="btn btn-danger btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/places/${p.type }/${p.name }/delcom'">
 <s:message code="comment.del"/>
 </button>
 </div>
@@ -221,6 +247,20 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
   </ul>
 </div>
 </c:if>
+</div>
+<!-- <div class="ad">
+<h3><s:message code="ad"/></h3>
+	 <script type="text/javascript">
+	atOptions = {
+		'key' : 'd3372883c2e0010919ffc443be2e2547',
+		'format' : 'iframe',
+		'height' : 90,
+		'width' : 728,
+		'params' : {}
+	};
+	document.write('<scr' + 'ipt type="text/javascript" src="http' + (location.protocol === 'https:' ? 's' : '') + '://www.bcloudhost.com/d3372883c2e0010919ffc443be2e2547/invoke.js"></scr' + 'ipt>');
+</script>
+</div> -->
 </div>
 <%@include file="/WEB-INF/incl/footer.app" %>
 </div>
