@@ -6,7 +6,7 @@ import org.springframework.validation.Validator;
 
 import kacper.bestplaces.constants.AppDemoConstants;
 import kacper.bestplaces.user.User;
-import kacper.bestplaces.utilities.AppdemoUtils;
+import kacper.bestplaces.utilities.AppUtils;
 
 public class EditUserProfileValidator implements Validator{
 
@@ -27,7 +27,7 @@ public class EditUserProfileValidator implements Validator{
 		
 		if(!u.getEmail().equals(null))
 		{
-			boolean isMatch=AppdemoUtils.checkEmailOrPassword(AppDemoConstants.emailPattern, u.getEmail());
+			boolean isMatch=AppUtils.checkEmailOrPassword(AppDemoConstants.emailPattern, u.getEmail());
 			if(!isMatch)
 				errors.rejectValue("email", "error.userEmailIsNotMatch");
 		}

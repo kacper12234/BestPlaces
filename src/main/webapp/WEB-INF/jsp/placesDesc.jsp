@@ -18,6 +18,19 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/3c44ec830b.js"></script>
+    <script type="text/javascript">
+            	$(document).ready(function() { 
+                $('#placeForm').on("submit", function(){
+                    	$('.progress').css('display','block');         	
+                });
+            });
+        </script> 
+        <script>
+        function takenr(nr)
+        {
+        	$('#nr').val(nr);
+        }
+        </script>
     <c:set var="p" value="${place }"/>
 <title><c:out value="${p.name }"/></title>
 </head>
@@ -48,10 +61,38 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 	<div class="carousel-inner" role="listbox">
 	<div class="carousel-item active">
 		<img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>1.jpg">
+		<c:choose>
+		<c:when test="${user == p.author }">
+		<div class="content">
+		<a href="#usure2" data-toggle="modal" data-target="#usure2" onclick="takenr(1)"><i class="fas fa-trash-alt fa-2x"></i></a>
+		</div>
+		</c:when>
+		<c:otherwise>
+		<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<div class="content">
+		<a href="#usure2" data-toggle="modal" data-target="#usure2" onclick="takenr(1)"><i class="fas fa-trash-alt fa-2x"></i></a>
+		</div>
+		</sec:authorize>
+		</c:otherwise>
+		</c:choose>
 	</div>
 	<c:forEach var="i" begin="2" end="${p.count }">
 	<div class="carousel-item">
 		<img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>${i }.jpg">
+		<c:choose>
+		<c:when test="${user == p.author }">
+		<div class="content">
+		<a href="#usure2" data-toggle="modal" data-target="#usure2" onclick="takenr(${i})"><i class="fas fa-trash-alt fa-2x"></i></a>
+		</div>
+		</c:when>
+		<c:otherwise>
+		<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<div class="content">
+		<a href="#usure2" data-toggle="modal" data-target="#usure2" onclick="takenr(${i})"><i class="fas fa-trash-alt fa-2x"></i></a>
+		</div>
+		</sec:authorize>
+		</c:otherwise>
+		</c:choose>
 	</div>
 	</c:forEach>
 	</div>
@@ -108,8 +149,11 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
   <a class="dropdown-item" href="/places/${p.author }/${p.name }/edit">
  <s:message code="place.mod"/>
 </a>
- <a class="dropdown-item" href="/places/${p.author }/${p.name }/delete">
+ <a class="dropdown-item" href="#usure" data-toggle="modal" data-target="#usure">
  <s:message code="place.del"/>
+</a>
+<a class="dropdown-item" href="#addphoto"  data-toggle="modal" data-target="#addphoto">
+<s:message code="place.addphoto"/>
 </a>
 </div>
 </div>
@@ -124,7 +168,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
   <a class="dropdown-item" href="/places/${p.author }/${p.name }/edit">
  <s:message code="place.mod"/>
 </a>
- <a class="dropdown-item" href="/places/${p.author }/${p.name }/delete">
+<a class="dropdown-item" href="#usure" data-toggle="modal" data-target="#usure">
  <s:message code="place.del"/>
 </a>
 </div>
@@ -162,10 +206,10 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </c:when>
 <c:otherwise>
 <div class="row">
-<button type="submit" class="btn btn-success btn-lg">
+<button id="bcom" type="submit" class="btn btn-success btn-lg">
 <s:message code="comment.mod"/>
 </button>
-<button type="button" class="btn btn-danger btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/places/${p.type }/${p.name }/delcom'">
+<button id="bcom" type="button" class="btn btn-danger btn-lg" onclick="window.location.href='${pageContext.request.contextPath}/places/${p.type }/${p.name }/delcom'">
 <s:message code="comment.del"/>
 </button>
 </div>
@@ -248,6 +292,74 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </div>
 </c:if>
 </div>
+<div class="modal" id="addphoto" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><s:message code="place.modal.photo"/></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+     <sf:form class="form"
+	action="phsend" method="POST" modelAttribute="fileupload" enctype="multipart/form-data">
+      <div class="modal-body">
+      <div class="form-group">
+      <label class="custom-file-label" for="inputImage"><s:message code="addplace.link"/></label>
+ <input type="file" name="filename[]" accept=".jpg" class="custom-file-input" id="inputImage" multiple/>
+		</div>
+		<div class="progress">
+  <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%;"><s:message code="file.upload.show"/></div>
+</div>
+      </div>
+      <div class="modal-footer">
+    <button class="btn btn-primary" type="submit"><s:message code="menu.add"/></button>
+  </div>
+  </sf:form>
+    </div>
+  </div>
+</div>
+<div class="modal" id="usure" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><s:message code="place.approve"/></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <p><s:message code="place.approve1"/></p>
+      </div>
+      <div class="modal-footer">
+    <a class="btn btn-primary" href="/places/${p.author }/${p.name }/delete"><s:message code="word.tak"/></a>
+    <button class="btn btn-danger" data-dismiss="modal"><s:message code="word.nie"/></button>
+  </div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="usure2" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><s:message code="place.approve"/></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <p><s:message code="place.approve2"/></p>
+      </div>
+      <div class="modal-footer">
+      <sf:form action="delph">
+      <input type="hidden"  id="nr" name="photonr"/>
+    <button class="btn btn-primary" type="submit"><s:message code="word.tak"/></button>
+    </sf:form>
+    <button class="btn btn-danger" data-dismiss="modal"><s:message code="word.nie"/></button>
+  </div>
+    </div>
+  </div>
+</div>
 <!-- <div class="ad">
 <h3><s:message code="ad"/></h3>
 	 <script type="text/javascript">
@@ -264,5 +376,15 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 </div>
 <%@include file="/WEB-INF/incl/footer.app" %>
 </div>
+			    <script type="text/javascript">
+$(".custom-file-input").on("change", function() {
+  var count=$(this)[0].files.length;
+  if(count>1)
+	  var fileName=count+' files selected';
+  else
+	  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+</script>
 </body>
 </html>

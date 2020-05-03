@@ -18,7 +18,7 @@
 	setTimeout("leave()",3000);
 </script>
 </head>
-<body>
+<body data-target="#navbarResponsive">
 <%@include file="/WEB-INF/incl/menu.app" %>
 <p align="center">
 	<font face="sans-serif" size="5">

@@ -51,5 +51,12 @@ public class UserServiceImpl implements UserService {
 	public void updateUserActivation(int activeCode, String activationCode) {
 		userRepository.updateActivation(activeCode, activationCode);
 	}
+
+	@Override
+	public void resetUserPassword(String newPassword, String code) {
+		// TODO Auto-generated method stub
+		userRepository.resetUserPassword(bCryptPasswordEncoder.encode(newPassword), code);
+	}
+
 	
 }

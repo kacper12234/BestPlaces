@@ -84,6 +84,20 @@ public class AddPlaceController {
 		}
 		
 		@POST
+		@RequestMapping(value="/places/{mail}/{name}/phsend")
+		public String addPhotos(@RequestParam("filename[]") MultipartFile[] mFile,@PathVariable("mail") String mail,@PathVariable("name") String name)
+		{
+			placesService.addPhotos(name, mFile);
+			return "redirect:/places/{mail}/{name}/1";
+		}
+		
+		@RequestMapping(value="/places/{mail}/{name}/delph")
+		public String delPhoto(@RequestParam("photonr") int nr,@PathVariable("mail") String mail,@PathVariable("name") String name) {
+			placesService.delPhoto(nr, name);
+			return "redirect:/places/{mail}/{name}/1";
+		}
+		
+		@POST
 		@RequestMapping(value="/placeupdated")
 		public String updateplace(Places place)
 		{

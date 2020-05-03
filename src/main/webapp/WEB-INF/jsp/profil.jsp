@@ -18,7 +18,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <title><s:message code="profil.userDane"/></title>
 </head>
-<body onload="loading()">
+<body data-target="#navbarResponsive" onload="loading()">
 <%@include file="/WEB-INF/incl/loading.app" %>
 <div id="page">
 <%@include file="/WEB-INF/incl/menu.app" %>

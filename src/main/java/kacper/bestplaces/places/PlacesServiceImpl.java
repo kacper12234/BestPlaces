@@ -198,5 +198,49 @@ public class PlacesServiceImpl implements PlacesService{
 	public void clearComment(int id) {
 		likesRepository.clearComment(id);
 	}
+
+	@Override
+	public void addPhotos(String place,MultipartFile[] mFile) {
+		String uploadDir="/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+place;
+		File file;
+		try {
+			file = new File(uploadDir);
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			int i=file.listFiles().length;
+			for(MultipartFile m: mFile)
+			{
+				i++;
+			Path fileAndPath = Paths.get(uploadDir,place+i+".jpg");
+			Files.write(fileAndPath, m.getBytes());
+			file = new File(fileAndPath.toString());
+			}
+			placesRepository.findByName(place).setCount(i);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void delPhoto(int nr,String place) {
+		// TODO Auto-generated method stub
+		String uploadDir="/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+place;
+		File file=new File(uploadDir);
+		int i=file.listFiles().length;
+		uploadDir+="/"+place;
+		file=new File(uploadDir+nr+".jpg");
+		file.delete();
+		if(nr<i)
+		for(int j=nr+1;j<=i;j++)
+		{
+			File dest=new File(uploadDir+(j-1)+".jpg");
+			file=new File(uploadDir+j+".jpg");
+			file.renameTo(dest);
+		}
+		placesRepository.findByName(place).setCount(i-1);
+	}
 	
 }

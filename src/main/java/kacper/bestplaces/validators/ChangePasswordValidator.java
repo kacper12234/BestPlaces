@@ -6,7 +6,7 @@ import org.springframework.validation.Validator;
 
 import kacper.bestplaces.constants.AppDemoConstants;
 import kacper.bestplaces.user.User;
-import kacper.bestplaces.utilities.AppdemoUtils;
+import kacper.bestplaces.utilities.AppUtils;
 
 public class ChangePasswordValidator implements Validator {
 
@@ -28,7 +28,7 @@ public class ChangePasswordValidator implements Validator {
 	public void checkPasswords(String newPass, Errors errors) {
 
 		if (!newPass.equals(null)) {
-			boolean isMatch = AppdemoUtils.checkEmailOrPassword(AppDemoConstants.passwordPattern, newPass);
+			boolean isMatch = AppUtils.checkEmailOrPassword(AppDemoConstants.passwordPattern, newPass);
 			if(!isMatch) {
 				errors.rejectValue("newPassword", "error.userPasswordIsNotMatch");
 			}

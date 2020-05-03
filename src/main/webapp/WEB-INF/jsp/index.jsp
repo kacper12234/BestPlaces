@@ -17,19 +17,6 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script>
-function resize()
-{
-    var size=document.getElementsByClassName("newplaces");
-    for(var i=0;i<size.length;i++)
-    if(window.innerWidth<576)
-    	size[i].style.height='50vw';
-    else
-    	size[i].style.height='20vw';
-};
-window.addEventListener("load",resize,false);
-window.addEventListener("resize",resize,false);
-    </script>
 <title><s:message code="menu.mainPage"/></title>
 </head>
 <body data-target="#navbarResponsive" onload="loading()">

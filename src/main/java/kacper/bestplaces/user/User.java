@@ -72,7 +72,7 @@ public class User {
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
 	}
-	//gettery i settery
+
 	public int getId() {
 		return id;
 	}

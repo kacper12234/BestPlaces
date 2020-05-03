@@ -18,7 +18,7 @@ import kacper.bestplaces.emailSender.Email;
 import kacper.bestplaces.emailSender.EmailSender;
 import kacper.bestplaces.places.Places;
 import kacper.bestplaces.places.PlacesService;
-import kacper.bestplaces.utilities.AppdemoUtils;
+import kacper.bestplaces.utilities.AppUtils;
 import kacper.bestplaces.validators.UserRegisterValidator;
 
 @Controller
@@ -59,7 +59,7 @@ public class RegisterController {
 		if (result.hasErrors()) {
 			returnPage = "register";
 		} else {
-			user.setActivationCode(AppdemoUtils.randomStringGenerator());
+			user.setActivationCode(AppUtils.randomStringGenerator());
 			String content = "Wymagane potwierdzenie rejestracji. Kliknij w poniższy link aby aktywować konto: " +
 					"https://bestplaces.azurewebsites.net/activatelink/" + user.getActivationCode();
 			emailSender.sendEmail(user.getEmail(), "Potwierdzenie rejestracji", content);
