@@ -54,7 +54,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 <div id="plimages" class="carousel slide">
 	<ol class="carousel-indicators">
 		<li data-target="#plimages" data-slide-to="0" class="active"/>
-		<c:forEach var="i" begin="1" end="${p.count }">
+		<c:forEach var="i" begin="1" end="${p.count-1 }">
 		<li data-target="#plimages" data-slide-to="${i }" />		
 		</c:forEach>
 	</ol>

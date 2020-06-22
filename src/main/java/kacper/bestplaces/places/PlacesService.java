@@ -19,6 +19,8 @@ public interface PlacesService {
 	public void changeDown(int down,String name);
 	public void changeComment(String comment,int id);
 	public void savePlace(Places place,MultipartFile[] mFile);
+	public void addPhotos(String place,MultipartFile[] mFile);
+	public void delPhoto(int nr,String name);
 	public void saveLike(Likes like,String name);
 	public void saveDisLike(Likes like,String name);
 	public void saveComment(Likes like,String name);

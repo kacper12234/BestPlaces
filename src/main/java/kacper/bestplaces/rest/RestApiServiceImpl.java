@@ -1,0 +1,146 @@
+package kacper.bestplaces.rest;
+
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.flickr4java.flickr.Flickr;
+import com.flickr4java.flickr.FlickrException;
+import com.flickr4java.flickr.REST;
+import com.flickr4java.flickr.photos.Photo;
+import com.flickr4java.flickr.photos.PhotoList;
+import com.flickr4java.flickr.photos.PhotosInterface;
+import com.flickr4java.flickr.photos.SearchParameters;
+
+import kacper.bestplaces.places.Places;
+import kacper.bestplaces.places.PlacesRepository;
+import kacper.bestplaces.places.PlacesService;
+import kacper.bestplaces.rest.pldtls.model.Details;
+import kacper.bestplaces.rest.plsearch.model.ExplorePlaces;
+import kacper.bestplaces.rest.plsearch.model.Item;
+import kacper.bestplaces.utilities.UserUtilities;
+import kacper.bestplaces.validators.AddPlaceValidator;
+
+@Service("restApiService")
+public class RestApiServiceImpl implements RestApiService{
+
+@Autowired
+private PlacesRepository placesRepository;
+
+@Autowired
+private PlacesService placesService;
+
+@Override
+public void getPlaces() throws MalformedURLException, IOException, FlickrException {
+	RestTemplate rt=new RestTemplate();
+	String hereApiKey="f0fvPzMKTkmZhlNjS_Ot9QCdpP8PyR49dIdHMnBk2bY";
+	String url="https://places.sit.ls.hereapi.com/places/v1/discover/"
+			+ "explore?languages=pl-PL&cat=sights-museums,natural-geographical&in=14.0745211117,49.0273953314,24.0299857927,54.8515359564&size=1000&apiKey="+hereApiKey;
+	ResponseEntity<ExplorePlaces> places=rt.exchange(url,
+			HttpMethod.GET,
+			new HttpEntity<>(null),
+			ExplorePlaces.class);
+	String flickrApiKey="d4c5f6cfc14f7fed7ff028885ef643d1";
+	String flickrSecret="e2f331a3bf83595e";
+	
+	Flickr flickr=new Flickr(flickrApiKey, flickrSecret, new REST());
+	PhotosInterface photos;
+	SearchParameters params;
+	for(Item item : places.getBody().getResults().getItems())
+	{
+		if(placesService.findPlaceByName(item.getTitle())==null)
+		{
+		url="https://places.demo.api.here.com/places/v1/places/"+item.getId()
+		+";context=Zmxvdy1pZD0yNWEwOTkyOS0wNDIzLTU3NTUtYWIwYS1mNzkyNDZjNmRkM2VfMTU5MDE1ODcxMjE1N18wXzE1OTkmc2l6ZT01JlgtRldELUFQUC1JRD1EZW1vQXBwSWQwMTA4MjAxM0dBTCZYLU5MUC1UZXN0aW5nPTE"
+		+ "?app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg";
+	ResponseEntity<Details> placeDetails=rt.exchange(url,
+			HttpMethod.GET,
+			new HttpEntity<>(null),
+			Details.class);
+	
+	char[] name=placeDetails.getBody().getName().toCharArray();
+	for(int i=0;i<name.length;i++)
+		if(name[i]==' ')
+			name[i]='+';
+	String text=new String(name);
+	if(placeDetails.getBody().getMedia().getEditorials()!=null && !placeDetails.getBody().getMedia().getEditorials().getItems().get(0).getDescription().contains("<")
+			&& text.length()<=50)
+	{
+	
+	photos=flickr.getPhotosInterface();
+	params=new SearchParameters();
+	params.setText(text);
+	params.setSort(SearchParameters.RELEVANCE);
+	
+	savePlace(placeDetails.getBody(),photos.search(params, 5, 0),item.getCategory().getId());
+	}
+		}
+	}
+}
+
+public void savePlace(Details details,PhotoList<Photo> photoList,String cat) throws MalformedURLException, IOException
+{
+	if(photoList.size()>0)
+	{
+	Places place=new Places();
+	place.setAuthor(UserUtilities.getLoggedUser());
+	place.setId(placesRepository.count()+1);
+	switch(cat)
+	{
+	case "sights-museums":
+	case "landmark-attraction":
+	case "religious-place":
+		place.setType("Miejsce zwiedzania");
+		break;
+	case "mall":
+	case "amusement-holiday-park":
+	case "sports-facility-venue":
+		place.setType("Rozrywka");
+		break;
+	case "hotel":
+		place.setType("Hotele");
+		break;
+	case "recreation":
+		place.setType("Natura");
+		break;
+		default:
+			place.setType("Inne");
+			break;
+	}
+	place.setName(details.getName());
+	place.setDescrp(details.getMedia().getEditorials().getItems().get(0).getDescription()+"\nZaimportowane z HERE");
+	place.setLoc(details.getLocation().getAddress().getCity());
+	place.setCount(photoList.size());
+	String uploadDir="/home/site/wwwroot/webapps/ROOT/WEB-INF/classes/static/images/"+place.getName();
+
+		File file = new File(uploadDir);
+		if (!file.exists()) 
+			file.mkdir();
+		
+	for(int i=0;i<photoList.size();i++)
+	savePhoto(photoList.get(i),uploadDir+'/'+place.getName()+(i+1)+".jpg");
+	placesRepository.save(place);
+	}
+}
+	
+
+public void savePhoto(Photo photo,String dir) throws MalformedURLException, IOException
+{
+	try(InputStream in = new URL(photo.getLargeUrl()).openStream()){
+	    Files.copy(in, Paths.get(dir));
+}
+
+}
+}

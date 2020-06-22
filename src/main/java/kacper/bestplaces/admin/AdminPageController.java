@@ -1,5 +1,7 @@
 package kacper.bestplaces.admin;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +20,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.flickr4java.flickr.FlickrException;
+
+import kacper.bestplaces.emailSender.Email;
+import kacper.bestplaces.places.Places;
+import kacper.bestplaces.places.PlacesService;
+import kacper.bestplaces.rest.RestApiService;
 import kacper.bestplaces.user.User;
 
 @Controller
@@ -31,6 +40,12 @@ public class AdminPageController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	private RestApiService restApiService;
+	
+	@Autowired
+	private PlacesService placesService;
 	
 	@GET
 	@RequestMapping(value="/admin/users/{page}")
@@ -47,6 +62,17 @@ public class AdminPageController {
 		return "admin/users";
 	}
 	
+	@POST
+	@RequestMapping(value="/admin/places")
+	public String getPlaces(Model model) throws MalformedURLException, IOException, FlickrException
+	{
+		restApiService.getPlaces();
+		List<Places> egPlaces=placesService.getEgPlaces();
+		model.addAttribute("egPlaces", egPlaces);
+		model.addAttribute("email",new Email());
+		return "index";
+	}
+		
 	@GET
 	@RequestMapping(value="/admin/users/search/{searchWord}/{page}")
 	public String openSearchAllUsersPage(@PathVariable("searchWord") String searchWord,@PathVariable("page") int page, Model model)

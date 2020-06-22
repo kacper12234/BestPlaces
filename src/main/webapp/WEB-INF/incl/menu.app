@@ -8,8 +8,11 @@
 	<div class="collapse navbar-collapse" id="navbarResponsive">
 		<ul class="navbar-nav mr-auto">
 			<sec:authorize access="hasRole('ROLE_ADMIN')">
-			<li class="nav-item">
-				<a href="/admin/users/1"><s:message code="menu.adminPage"/></a>
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" id="activity" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><s:message code="menu.adminPage"/></a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+				<a class="dropdown-item" href="/admin/users/1"><s:message code="menu.act.users"/></a>
+				<a class="dropdown-item" href="/admin/places"><s:message code="menu.act.places"/></a>
 				</li>
 			</sec:authorize>
 			</ul>
@@ -21,7 +24,7 @@
         <a class="dropdown-item" href="/places/1"><s:message code="menu.cata"/></a>
           <a class="dropdown-item" href="/places/cat/Natura/1"><s:message code="menu.cat1"/></a>
           <a class="dropdown-item" href="/places/cat/Restauracje/1"><s:message code="menu.cat2"/></a>
-          <a class="dropdown-item" href="/places/cat/Zabytki/1"><s:message code="menu.cat3"/></a>
+          <a class="dropdown-item" href="/places/cat/Miejsce zwiedzania/1"><s:message code="menu.cat3"/></a>
           <a class="dropdown-item" href="/places/cat/Hotele/1"><s:message code="menu.cat4"/></a>
           <a class="dropdown-item" href="/places/cat/Rozrywka/1"><s:message code="menu.cat5"/></a>
           <a class="dropdown-item" href="/places/cat/Inne/1"><s:message code="menu.cat6"/></a>
