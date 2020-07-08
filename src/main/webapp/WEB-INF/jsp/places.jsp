@@ -137,7 +137,40 @@ function startSearchType()
 <ul class="pagination">
     <c:choose>
     <c:when test="${currentPage > 1 }">
-    <li class="page-item" onclick="window.location.href='${pageContext.request.contextPath}/places/${currentPage - 1}'">
+                  <c:choose>
+          <c:when test="${not sort }">
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/${currentPage-1}'">
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/${currentPage-1}'">
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/${currentPage-1}'">
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/${currentPage-1}'">
+          </c:when>
+          </c:choose>
+          </c:when>
+          <c:otherwise>
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/sortDate/${currentPage-1}'">
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/sortDate/${currentPage-1}'">
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/sortDate/${currentPage-1}'">
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/sortDate/${currentPage-1}'">
+          </c:when>
+          </c:choose>
+          </c:otherwise>
+          </c:choose>
      <a class="page-link" aria-label="Previous">
      <span aria-hidden="true">&laquo;</span>
       </a>
@@ -152,19 +185,186 @@ function startSearchType()
       </li>
     </c:otherwise>
     </c:choose>
+    <c:choose>
+    <c:when test="${totalPages <= 7 }">
     <c:forEach var="i" begin="1" end="${totalPages }">
     <c:choose>
     <c:when test="${i == currentPage }">
     <li class="page-item active"><a class="page-link">${i }</a></li>
     </c:when>
     <c:otherwise>
-    <li class="page-item"><a class="page-link">${i }</a></li>
+                  <c:choose>
+          <c:when test="${not sort }">
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          </c:choose>
+          </c:when>
+          <c:otherwise>
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          </c:choose>
+          </c:otherwise>
+          </c:choose>
     </c:otherwise>
     </c:choose>
     </c:forEach>
+    </c:when>
+    <c:when test="${currentPage+7<totalPages}">
+    <c:if test="${currentPage>1 }">
+    <li class="page-item"><a class="page-link">...</a></li>
+    </c:if>
+     <c:forEach var="i" begin="${currentPage }" end="${currentPage+7 }">
     <c:choose>
+    <c:when test="${i == currentPage }">
+    <li class="page-item active"><a class="page-link">${i }</a></li>
+    </c:when>
+    <c:otherwise>
+              <c:choose>
+          <c:when test="${not sort }">
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          </c:choose>
+          </c:when>
+          <c:otherwise>
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          </c:choose>
+          </c:otherwise>
+          </c:choose>
+    </c:otherwise>
+    </c:choose>
+    </c:forEach>
+    <li class="page-item"><a class="page-link">...</a></li>
+    </c:when>
+    <c:otherwise>
+    <c:if test="${currentPage>1 }">
+    <li class="page-item"><a class="page-link">...</a></li>
+    </c:if>
+     <c:forEach var="i" begin="${currentPage }" end="${totalPages }">
+    <c:choose>
+    <c:when test="${i == currentPage }">
+    <li class="page-item active"><a class="page-link">${i }</a></li>
+    </c:when>
+    <c:otherwise>
+                 <c:choose>
+          <c:when test="${not sort }">
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          </c:choose>
+          </c:when>
+          <c:otherwise>
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/sortDate/${i}'"><a class="page-link">${i }</a></li>
+          </c:when>
+          </c:choose>
+          </c:otherwise>
+          </c:choose>
+    </c:otherwise>
+    </c:choose>
+    </c:forEach>
+    </c:otherwise>
+    </c:choose>
+        <c:choose>
     <c:when test="${currentPage < totalPages }">
-    <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/${currentPage + 1}'">
+                      <c:choose>
+          <c:when test="${not sort }">
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/${currentPage+1}'">
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/${currentPage+1}'">
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/${currentPage+1}'">
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/${currentPage+1}'">
+          </c:when>
+          </c:choose>
+          </c:when>
+          <c:otherwise>
+          <c:choose>
+          <c:when test="${empty type and empty search}">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/sortDate/${currentPage+1}'">
+          </c:when>
+          <c:when test="${not empty type and empty search }">
+           <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/sortDate/${currentPage+1}'">
+          </c:when>
+          <c:when test="${not empty search and empty type}">
+            <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/search/${search}/sortDate/${currentPage+1}'">
+          </c:when>
+          <c:when test="${not empty search and not empty type }">
+          <li class="page-item"  onclick="window.location.href='${pageContext.request.contextPath}/places/cat/${type}/search/${search}/sortDate/${currentPage+1}'">
+          </c:when>
+          </c:choose>
+          </c:otherwise>
+          </c:choose>
     <a class="page-link"  aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
       </a>
