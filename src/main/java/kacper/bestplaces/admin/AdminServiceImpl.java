@@ -1,6 +1,8 @@
 package kacper.bestplaces.admin;
 
 import java.util.List;
+
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,50 +12,45 @@ import kacper.bestplaces.user.User;
 
 @Service("adminService")
 @Transactional
+@AllArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
-	
-	
-	@Autowired
-	private AdminRepository adminRepository;
+
+    private final AdminRepository adminRepository;
 
 
-	@Override
-	public Page<User> findAll(Pageable pageable) {
-		Page<User> userList = adminRepository.findAll(pageable);
-		return userList;
-	}
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        Page<User> userList = adminRepository.findAll(pageable);
+        return userList;
+    }
 
-	@Override
-	public User findUserById(int id)
-	{
-		User user=adminRepository.findUserById(id);
-		return user;
-	}
-	
-	@Override
-	public void updateUser(int id,int nrRoli,int activity)
-	{
-		adminRepository.updateActivationUser(activity, id);
-		adminRepository.updateRoleUser(nrRoli, id);
-	}
-	
-	@Override
-	public Page<User> findAllSearch(String param, Pageable pg)
-	{
-		Page<User> userList=adminRepository.findAllSearch(param,pg);
-		return userList;
-	}
-	
-	public void saveAll(List<User> userList)
-	{
-		adminRepository.saveAll(userList);
-	}
+    @Override
+    public User findUserById(int id) {
+        User user = adminRepository.findUserById(id);
+        return user;
+    }
 
-	@Override
-	public void deleteUserById(int id) {
-		adminRepository.deleteUserFromUserRole(id);
-		adminRepository.deleteUserFromUser(id);
-	}
-	
+    @Override
+    public void updateUser(int id, int nrRoli, int activity) {
+        adminRepository.updateActivationUser(activity, id);
+        adminRepository.updateRoleUser(nrRoli, id);
+    }
+
+    @Override
+    public Page<User> findAllSearch(String param, Pageable pg) {
+        Page<User> userList = adminRepository.findAllSearch(param, pg);
+        return userList;
+    }
+
+    public void saveAll(List<User> userList) {
+        adminRepository.saveAll(userList);
+    }
+
+    @Override
+    public void deleteUserById(int id) {
+        adminRepository.deleteUserFromUserRole(id);
+        adminRepository.deleteUserFromUser(id);
+    }
+
 }

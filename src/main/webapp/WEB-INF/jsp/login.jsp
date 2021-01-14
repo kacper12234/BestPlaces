@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8"
+		 pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
@@ -32,7 +32,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 		<h1 id="loginName"><s:message code="logowanie.pageName"/></h1>
 		<div class="form-group">
 		<c:if test="${not empty param.error}">
-					<div><font color="red"><s:message code="error.logowanie"/></font></div>
+					<div><span style="color: red; "><s:message code="error.logowanie"/></span></div>
 					</c:if>
 		<label id="input" for="InputEmail"><s:message code="logowanie.email"/></label>
 		<input type="text" name="email" class="form-control" id="InputEmail">

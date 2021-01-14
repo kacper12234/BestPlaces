@@ -6,7 +6,8 @@ import java.util.Locale;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import kacper.bestplaces.places.Place;
+import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,25 +17,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import kacper.bestplaces.emailSender.Email;
 import kacper.bestplaces.emailSender.EmailSender;
-import kacper.bestplaces.places.Places;
 import kacper.bestplaces.places.PlacesService;
 import kacper.bestplaces.utilities.AppUtils;
 import kacper.bestplaces.validators.UserRegisterValidator;
 
+import static kacper.bestplaces.utilities.AppUtils.BASE_URL;
+
+
+@AllArgsConstructor
 @Controller
 public class RegisterController {
-	
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private PlacesService placesService;
-	
-	@Autowired
-	MessageSource messageSource;
-	
-	@Autowired
-	EmailSender emailSender;
+
+	private final UserService userService;
+	private final PlacesService placesService;
+	private final MessageSource messageSource;
+	private final EmailSender emailSender;
 	
 	@GET
 	@RequestMapping(value = "/register")
@@ -48,7 +45,7 @@ public class RegisterController {
 	@RequestMapping(value = "/adduser")
 	public String registerAction(User user, BindingResult result, Model model, Locale locale) {
 				
-		String returnPage = null;
+		String returnPage;
 		
 		User userExist = userService.findUserByEmail(user.getEmail());
 		
@@ -61,10 +58,10 @@ public class RegisterController {
 		} else {
 			user.setActivationCode(AppUtils.randomStringGenerator());
 			String content = "Wymagane potwierdzenie rejestracji. Kliknij w poniższy link aby aktywować konto: " +
-					"https://bestplaces.azurewebsites.net/activatelink/" + user.getActivationCode();
+					BASE_URL+"/activatelink/" + user.getActivationCode();
 			emailSender.sendEmail(user.getEmail(), "Potwierdzenie rejestracji", content);
 			userService.saveUser(user);
-			List<Places> egPlaces=placesService.getEgPlaces();
+			List<Place> egPlaces=placesService.getEgPlaces();
 			model.addAttribute("egPlaces", egPlaces);
 			model.addAttribute("message", messageSource.getMessage("user.register.success.email", null, locale));
 			model.addAttribute("user", new User());
@@ -81,7 +78,7 @@ public class RegisterController {
 	{
 		userService.updateUserActivation(1, activationCode);
 		model.addAttribute("message", messageSource.getMessage("user.register.success", null,locale));
-		List<Places> egPlaces=placesService.getEgPlaces();
+		List<Place> egPlaces=placesService.getEgPlaces();
 		model.addAttribute("egPlaces", egPlaces);
 		model.addAttribute("email",new Email());
 		return "index";

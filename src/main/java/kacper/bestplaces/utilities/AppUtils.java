@@ -1,11 +1,15 @@
 package kacper.bestplaces.utilities;
 
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AppUtils {
-	
+
+	public static final String BASE_URL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
 	public static boolean checkEmailOrPassword(String pattern, String pStr) {
 		
 		Pattern p = Pattern.compile(pattern);

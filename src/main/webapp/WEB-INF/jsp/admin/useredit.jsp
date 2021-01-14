@@ -72,7 +72,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 			<tr>
 				<td colspan="2" align="center" bgcolor="#fff">
 					<input type="submit" value="<s:message code="button.save"/>" />
-					<input type="button" value="<s:message code="button.cancel"/>" 
+					<input type="button" value="<s:message code="button.cancel"/>"
 						onclick="window.location.href='${pageContext.request.contextPath}/admin/users/1'"/>
 				</td>
 			</tr>

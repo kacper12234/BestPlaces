@@ -12,7 +12,7 @@
 				<a class="nav-link dropdown-toggle" id="activity" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><s:message code="menu.adminPage"/></a>
 				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 				<a class="dropdown-item" href="/admin/users/1"><s:message code="menu.act.users"/></a>
-				<a class="dropdown-item" href="/admin/places"><s:message code="menu.act.places"/></a>
+				<a class="dropdown-item" href="/admin/places"><s:message code="menu.act.place"/></a>
 				</li>
 			</sec:authorize>
 			</ul>

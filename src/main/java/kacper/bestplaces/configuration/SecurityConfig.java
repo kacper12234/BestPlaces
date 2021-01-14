@@ -19,18 +19,21 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	@Autowired
-	private BCryptPasswordEncoder bcp;
+	private final BCryptPasswordEncoder bcp;
 	
-	@Autowired
-	private DataSource ds;
+	private final DataSource ds;
 	
 	@Value("${spring.queries.users-query}")
 	private String usersQuery;
 	
 	@Value("${spring.queries.roles-query}")
 	private String rolesQuery;
-	
+
+	public SecurityConfig(BCryptPasswordEncoder bcp, DataSource ds) {
+		this.bcp = bcp;
+		this.ds = ds;
+	}
+
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication().usersByUsernameQuery(usersQuery)
 		.authoritiesByUsernameQuery(rolesQuery)
@@ -62,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().exceptionHandling().accessDeniedPage("/denied");
 	}
 	
-	public void configure(WebSecurity webSec) throws Exception {
+	public void configure(WebSecurity webSec) {
 		webSec.ignoring()
 		.antMatchers("/resources/**", "/statics/**", "/css/**", "/js/**", "/images/**", "/incl/**");
 	}

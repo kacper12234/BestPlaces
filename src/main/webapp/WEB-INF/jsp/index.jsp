@@ -114,7 +114,7 @@ $('#regSuccess').modal()
 			<p class="lead">
 			<s:message code="index.notsomuch"/>
 			</p>
-			<a class="btn btn-secondary btn-md" href="/places/1">
+			<a class="btn btn-secondary btn-md" href="/place/1">
 			<s:message code="index.watchmore"/>
 			</a>
 		</div>

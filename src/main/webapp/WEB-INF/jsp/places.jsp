@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="kacper.bestplaces.reactions.Type" %>
 <%@ taglib prefix="s"  uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
@@ -43,7 +44,7 @@ function startSearchType()
 <div id="placeslist" class="container">
 <div class="row" style="padding: .1rem;">
 <div class="input-group mb-4" style="max-width: 65%; padding-left: .8rem;">
-            <input id="searchloc" type="search" placeholder="<s:message code="places.search"/>" aria-describedby="button-addon5" class="form-control">
+            <input id="searchloc" type="search" placeholder="<s:message code="place.search"/>" aria-describedby="button-addon5" class="form-control">
             <div class="input-group-append">
             <c:choose>
             <c:when test="${empty type}">
@@ -100,7 +101,7 @@ function startSearchType()
           </div>
           </div>
           <c:if test="${empty placesList }">
-          <h1 align="center"><s:message code="places.notfound"/></h1>
+          <h1 align="center"><s:message code="place.notfound"/></h1>
           </c:if>
 <c:forEach var="p" items="${placesList }">
 <c:set var="count" value="${count+1 }" scope="page"/>
@@ -119,9 +120,9 @@ function startSearchType()
 <div class="col-md-3">
 <div class="row" style="padding: .5rem 1rem; justify-content:right; flex-wrap:nowrap;">
 <i class="fas fa-thumbs-up fa-lg" style="color: green;"></i>
-<p style="margin: 0 .5rem;"><c:out value="${p.up }"/></p>
+<p style="margin: 0 .5rem;"><c:out value="${p.getRate(Type.LIKE) }"/></p>
 <i class="fas fa-thumbs-down fa-lg" style="color: red;"></i>
-<p style="margin: 0 .5rem;"><c:out value="${p.down }"/></p>
+<p style="margin: 0 .5rem;"><c:out value="${p.getRate(Type.DISLIKE)  }"/></p>
 </div>
 </div>
 </div>

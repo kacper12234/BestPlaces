@@ -4,7 +4,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import kacper.bestplaces.constants.AppDemoConstants;
+import kacper.bestplaces.constants.AppConstants;
 import kacper.bestplaces.user.User;
 import kacper.bestplaces.utilities.AppUtils;
 
@@ -25,14 +25,14 @@ public class UserRegisterValidator implements Validator {
 		ValidationUtils.rejectIfEmpty(errors, "password", "error.userPassword.empty");
 		
 		if (!u.getEmail().equals(null)) {
-			boolean isMatch = AppUtils.checkEmailOrPassword(AppDemoConstants.emailPattern, u.getEmail());
+			boolean isMatch = AppUtils.checkEmailOrPassword(AppConstants.emailPattern, u.getEmail());
 			if(!isMatch) {
 				errors.rejectValue("email", "error.userEmailIsNotMatch");
 			}
 		}
 		
 		if (!u.getPassword().equals(null)) {
-			boolean isMatch = AppUtils.checkEmailOrPassword(AppDemoConstants.passwordPattern, u.getPassword());
+			boolean isMatch = AppUtils.checkEmailOrPassword(AppConstants.passwordPattern, u.getPassword());
 			if(!isMatch) {
 				errors.rejectValue("password", "error.userPasswordIsNotMatch");
 			}

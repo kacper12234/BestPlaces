@@ -1,17 +1,16 @@
 package kacper.bestplaces.validators;
 
+import kacper.bestplaces.places.Place;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
-import kacper.bestplaces.places.Places;
-
 public class AddPlaceValidator implements Validator{
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return Places.class.equals(clazz);
+		return Place.class.equals(clazz);
 	}
 
 	@Override
@@ -29,7 +28,7 @@ public class AddPlaceValidator implements Validator{
 			error.rejectValue("filename", "error.placeImg.empty");
 	}
 
-	public void validatePlaceExist(Places place,Errors error)
+	public void validatePlaceExist(Place place, Errors error)
 	{
 		if(place != null)
 			error.rejectValue("name", "error.placeExist");

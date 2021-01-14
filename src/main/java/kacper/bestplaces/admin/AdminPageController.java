@@ -11,6 +11,8 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 
+import kacper.bestplaces.places.Place;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -24,28 +26,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.flickr4java.flickr.FlickrException;
 
 import kacper.bestplaces.emailSender.Email;
-import kacper.bestplaces.places.Places;
 import kacper.bestplaces.places.PlacesService;
 import kacper.bestplaces.rest.RestApiService;
 import kacper.bestplaces.user.User;
 
+@AllArgsConstructor
 @Controller
 @Secured(value= {"ROLE_ADMIN"})
 public class AdminPageController {
 	
-	private static int ELEMENTS=10;
-	
-	@Autowired
-	private AdminService adminService;
-	
-	@Autowired
-	private MessageSource messageSource;
-	
-	@Autowired
-	private RestApiService restApiService;
-	
-	@Autowired
-	private PlacesService placesService;
+	private static final int ELEMENTS=10;
+
+	private final AdminService adminService;
+	private final MessageSource messageSource;
+	private final RestApiService restApiService;
+	private final PlacesService placesService;
 	
 	@GET
 	@RequestMapping(value="/admin/users/{page}")
@@ -64,10 +59,10 @@ public class AdminPageController {
 	
 	@POST
 	@RequestMapping(value="/admin/places")
-	public String getPlaces(Model model) throws MalformedURLException, IOException, FlickrException
+	public String getPlaces(Model model) throws IOException, FlickrException
 	{
 		restApiService.getPlaces();
-		List<Places> egPlaces=placesService.getEgPlaces();
+		List<Place> egPlaces=placesService.getEgPlaces();
 		model.addAttribute("egPlaces", egPlaces);
 		model.addAttribute("email",new Email());
 		return "index";

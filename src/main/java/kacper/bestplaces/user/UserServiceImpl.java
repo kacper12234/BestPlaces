@@ -3,6 +3,7 @@ package kacper.bestplaces.user;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,14 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service("userService")
 @Transactional
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-	
-	@Autowired
-	private UserRepository userRepository;
-	@Autowired
-	private RoleRepository roleRepository;
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	private final UserRepository userRepository;
+	private final RoleRepository roleRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	public User findUserByEmail(String email) {
@@ -30,7 +29,7 @@ public class UserServiceImpl implements UserService {
 		user.setActive(0);
 		
 		Role role = roleRepository.findByRole("ROLE_USER");
-		user.setRoles(new HashSet<Role>(Arrays.asList(role)));
+		user.setRoles(new HashSet<>(Arrays.asList(role)));
 		
 		userRepository.save(user);
 		
