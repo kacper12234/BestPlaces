@@ -1,6 +1,6 @@
 package kacper.bestplaces.validators;
 
-import kacper.bestplaces.places.Place;
+import kacper.bestplaces.model.Place;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="kacper.bestplaces.reactions.Type" %>
+<%@ page import="kacper.bestplaces.model.Type" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
@@ -86,7 +86,7 @@
                                     <div class="carousel-item">
                                         <img src="/resources/images/<c:out value="${p.name }"/>/<c:out value="${p.name }"/>${i }.jpg">
                                         <c:choose>
-                                            <c:when test="${user == p.user.username }">
+                                            <c:when test="${user == p.user.username}">
                                                 <div class="content">
                                                     <a href="#usure2" data-toggle="modal" data-target="#usure2"
                                                        onclick="takenr(${i})"><i class="fas fa-trash-alt fa-2x"></i></a>
@@ -155,7 +155,7 @@
                                         <s:message code="place.tool"/>
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="/places/${p.user.email }/${p.name }/edit">
+                                        <a class="dropdown-item" href="/place/${p.user.email }/${p.name }/edit">
                                             <s:message code="place.mod"/>
                                         </a>
                                         <a class="dropdown-item" href="#usure" data-toggle="modal" data-target="#usure">
@@ -176,7 +176,7 @@
                                             <s:message code="place.tool"/>
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="/places/${p.user.email }/${p.name }/edit">
+                                            <a class="dropdown-item" href="/place/${p.user.email }/${p.name }/edit">
                                                 <s:message code="place.mod"/>
                                             </a>
                                             <a class="dropdown-item" href="#usure" data-toggle="modal"
@@ -197,6 +197,7 @@
         <div id="comment" class="container">
             <sec:authorize access="isAuthenticated()">
                 <sf:form class="form" action="/places/${p.type}/${p.name}/addcom" modelAttribute="reaction" method="POST">
+                    <sf:hidden path="id"></sf:hidden>
                     <div class="form-group">
                         <label for="mycom">
                             <c:choose>

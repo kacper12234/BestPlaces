@@ -29,6 +29,7 @@ integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6ji
 		<div class="col-md-4 col-xl-4 col-xs-12">
 <sf:form id="placeForm" class="form-container" action="/placeupdated" modelAttribute="place"
 		enctype="multipart/form-data" method="POST">
+	<sf:hidden path="id"/>
 <h2 align="center" style="margin-top: 5rem;"><s:message code="place.mod.form"/></h2>
 		<div class="form-group">
 		<div><font color="red"><sf:errors path="name"/></font></div>

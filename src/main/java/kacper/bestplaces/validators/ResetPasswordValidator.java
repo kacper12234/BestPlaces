@@ -3,7 +3,7 @@ package kacper.bestplaces.validators;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import kacper.bestplaces.user.User;
+import kacper.bestplaces.model.User;
 
 
 public class ResetPasswordValidator implements Validator {

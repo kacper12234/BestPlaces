@@ -5,7 +5,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import kacper.bestplaces.constants.AppConstants;
-import kacper.bestplaces.user.User;
+import kacper.bestplaces.model.User;
 import kacper.bestplaces.utilities.AppUtils;
 
 public class EditUserProfileValidator implements Validator{

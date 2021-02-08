@@ -95,7 +95,7 @@ $('#regSuccess').modal()
 	<div class="heading-underline"></div>
 	</div>
 	<div class="row no-padding">
-	<c:forEach var="p" items="${egPlaces }">
+	<c:forEach var="p" items="${randomPlaces }">
 	<div class="col-sm-4">
 	<div class="newplaces">
 <a href="/places/${p.type }/${p.name }/1">
@@ -114,7 +114,7 @@ $('#regSuccess').modal()
 			<p class="lead">
 			<s:message code="index.notsomuch"/>
 			</p>
-			<a class="btn btn-secondary btn-md" href="/place/1">
+			<a class="btn btn-secondary btn-md" href="/places/1">
 			<s:message code="index.watchmore"/>
 			</a>
 		</div>

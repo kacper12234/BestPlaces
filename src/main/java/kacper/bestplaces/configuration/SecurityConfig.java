@@ -52,7 +52,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/places/**").permitAll()
 		.antMatchers("/resources/**").permitAll()
 		.antMatchers("/resetpass/**").permitAll()
-	//	.antMatchers("/admin").hasAuthority("ROLE_ADMIN")
 		.anyRequest().authenticated()
 		.and().csrf().disable()
 		.formLogin()
