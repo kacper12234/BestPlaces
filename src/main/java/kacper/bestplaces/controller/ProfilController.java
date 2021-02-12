@@ -21,12 +21,12 @@ import kacper.bestplaces.model.Email;
 import kacper.bestplaces.service.EmailSender;
 import kacper.bestplaces.service.PlacesService;
 import kacper.bestplaces.utilities.AppUtils;
-import kacper.bestplaces.utilities.UserUtilities;
+import kacper.bestplaces.service.AuthService;
 import kacper.bestplaces.validators.ChangePasswordValidator;
 import kacper.bestplaces.validators.EditUserProfileValidator;
 import kacper.bestplaces.validators.ResetPasswordValidator;
 
-import static kacper.bestplaces.utilities.AppUtils.BASE_URL;
+import static kacper.bestplaces.utilities.ServletUtils.BASE_URL;
 
 @AllArgsConstructor
 @Controller
@@ -36,17 +36,18 @@ public class ProfilController {
 	private final PlacesService placesService;
 	private final MessageSource messageSource;
 	private final EmailSender emailSender;
+	private final AuthService authService;
 	
 	@GET
 	@RequestMapping(value = "/profil")
 	public String showUserProfilePage(Model model) {
-		String username = UserUtilities.getLoggedUser();
+		String username = authService.getLoggedUser();
 		
 		User user = userService.findUserByEmail(username);
 		
 		int nrRoli = user.getRoles().iterator().next().getId();
 		
-		user.setNrRoli(nrRoli);
+		user.setRoleId(nrRoli);
 		
 		model.addAttribute("user", user);
 		
@@ -57,7 +58,7 @@ public class ProfilController {
 	@RequestMapping(value="/editpassword")
 	public String editUserPassword(Model model)
 	{
-		String username=UserUtilities.getLoggedUser();
+		String username= authService.getLoggedUser();
 		User user=userService.findUserByEmail(username);
 		model.addAttribute("user", user);
 		return "editpassword";
@@ -137,7 +138,7 @@ public class ProfilController {
 	@GET
 	@RequestMapping(value = "/editprofil")
 	public String changeUserData(Model model) {
-		String username = UserUtilities.getLoggedUser();
+		String username = authService.getLoggedUser();
 		User user = userService.findUserByEmail(username);
 		model.addAttribute("user", user);
 		return "editprofil";

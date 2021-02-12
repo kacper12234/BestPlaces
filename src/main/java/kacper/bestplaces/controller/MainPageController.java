@@ -18,7 +18,7 @@ import kacper.bestplaces.model.Email;
 import kacper.bestplaces.service.EmailSender;
 import kacper.bestplaces.model.Place;
 import kacper.bestplaces.service.PlacesService;
-import kacper.bestplaces.utilities.UserUtilities;
+import kacper.bestplaces.service.AuthService;
 
 @AllArgsConstructor
 @Controller
@@ -27,6 +27,7 @@ public class MainPageController {
 	private final PlacesService placesService;
 	private final EmailSender emailSender;
 	private final MessageSource messageSource;
+	private final AuthService authService;
 	
 	@GET
 	@RequestMapping(value = {"/", "/index"})
@@ -43,7 +44,7 @@ public class MainPageController {
 	{
 		List<Place> randomPlaces=placesService.getRandomPlaces();
 		model.addAttribute("randomPlaces", randomPlaces);
-		emailSender.sendEmail("bestplaces.noreply@gmail.com",email.getType()+" "+UserUtilities.getLoggedUser(), email.getMsg());
+		emailSender.sendEmail("bestplaces.noreply@gmail.com",email.getType()+" "+ authService.getLoggedUser(), email.getMsg());
 		model.addAttribute("message", messageSource.getMessage("mail.sent", null, locale));
 		return "index";
 	}

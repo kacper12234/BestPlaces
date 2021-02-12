@@ -9,10 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PlacesRepository extends JpaRepository<Place, Integer>{
 
-	Place findByName(String name);
+	Optional<Place> findByName(String name);
 	
 	Page<Place> findByType(String type, Pageable pg);
 

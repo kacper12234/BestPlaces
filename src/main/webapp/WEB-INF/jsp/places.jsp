@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="kacper.bestplaces.model.Type" %>
+<%@ page import="kacper.bestplaces.model.Rate" %>
 <%@ taglib prefix="s"  uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
@@ -120,9 +120,9 @@ function startSearchType()
 <div class="col-md-3">
 <div class="row" style="padding: .5rem 1rem; justify-content:right; flex-wrap:nowrap;">
 <i class="fas fa-thumbs-up fa-lg" style="color: green;"></i>
-<p style="margin: 0 .5rem;"><c:out value="${p.getRate(Type.LIKE) }"/></p>
+<p style="margin: 0 .5rem;"><c:out value="${p.getRate(Rate.LIKE) }"/></p>
 <i class="fas fa-thumbs-down fa-lg" style="color: red;"></i>
-<p style="margin: 0 .5rem;"><c:out value="${p.getRate(Type.DISLIKE)  }"/></p>
+<p style="margin: 0 .5rem;"><c:out value="${p.getRate(Rate.DISLIKE)  }"/></p>
 </div>
 </div>
 </div>

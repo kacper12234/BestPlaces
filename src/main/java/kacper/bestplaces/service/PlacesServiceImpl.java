@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import kacper.bestplaces.exceptions.PlaceNotFoundException;
+import kacper.bestplaces.exceptions.UserNotFoundException;
 import kacper.bestplaces.model.Place;
+import kacper.bestplaces.model.Rate;
 import kacper.bestplaces.repository.PlacesRepository;
 import kacper.bestplaces.model.Reaction;
 import kacper.bestplaces.repository.ReactionRepository;
-import kacper.bestplaces.model.Type;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.data.domain.Page;
@@ -25,9 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kacper.bestplaces.model.User;
 import kacper.bestplaces.repository.UserRepository;
-import kacper.bestplaces.utilities.UserUtilities;
 
-import static kacper.bestplaces.constants.AppConstants.IMAGES;
+import static kacper.bestplaces.utilities.AppUtils.IMAGES;
 
 @Service("placesService")
 @Transactional
@@ -37,18 +38,17 @@ public class PlacesServiceImpl implements PlacesService {
     private final PlacesRepository placesRepository;
     private final ReactionRepository reactionRepository;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     @Override
     public void savePlace(Place place, MultipartFile[] mFile) {
-        place.setUser(userRepository.findByEmail(UserUtilities.getLoggedUser()));
+        place.setUser(userRepository.findByEmail(authService.getLoggedUser()).orElseThrow(UserNotFoundException::new));
         place.setId(Math.toIntExact(placesRepository.count() + 1));
         String uploadDir = IMAGES + place.getName();
         File file;
         try {
             file = new File(uploadDir);
-            if (!file.exists()) {
-                file.mkdir();
-            }
+            if (!file.exists()) file.mkdir();
             int i = 0;
             for (MultipartFile m : mFile) {
                 i++;
@@ -80,24 +80,23 @@ public class PlacesServiceImpl implements PlacesService {
 
     @Override
     public Page<Place> getPlacesByType(String type, Pageable pg) {
-        Page<Place> places = placesRepository.findByType(type, pg);
-        return places;
+        return placesRepository.findByType(type, pg);
     }
 
     @Override
     public Place findPlaceByName(String name) {
-        return placesRepository.findByName(name);
+        return placesRepository.findByName(name).orElseThrow(PlaceNotFoundException::new);
     }
 
     @Override
-    public void saveReaction(Reaction reaction, Place place, User user, Type type) {
-        reaction.setType(type);
+    public void saveReaction(Reaction reaction, Place place, User user, Rate rate) {
+        reaction.setRate(rate);
         saveReactionAndAddToLists(reaction,user,place);
     }
 
     @Override
-    public void changeRate(Type type, Integer id) {
-        reactionRepository.changeRate(String.valueOf(type), id);
+    public void changeRate(Rate rate, Integer id) {
+        reactionRepository.changeRate(String.valueOf(rate), id);
     }
 
     @Override
@@ -115,19 +114,17 @@ public class PlacesServiceImpl implements PlacesService {
 
     @Override
     public Page<Place> findInLoc(String param, Pageable pg) {
-        Page<Place> places = placesRepository.findInLoc(param, pg);
-        return places;
+        return placesRepository.findInLoc(param, pg);
     }
 
     @Override
     public Page<Place> findPlacesTypeInLoc(String param, String type, Pageable pg) {
-        Page<Place> places = placesRepository.findTypeInLoc(param, type, pg);
-        return places;
+        return placesRepository.findTypeInLoc(param, type, pg);
     }
 
     @Override
     public User getUser(String mail) {
-        return userRepository.findByEmail(mail);
+        return userRepository.findByEmail(mail).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -142,7 +139,7 @@ public class PlacesServiceImpl implements PlacesService {
 
     @Override
     public void deletePlace(String name) throws IOException {
-        Place place = placesRepository.findByName(name);
+        Place place = placesRepository.findByName(name).orElseThrow(PlaceNotFoundException::new);
         int count = Math.toIntExact(placesRepository.count());
         File dir = new File(IMAGES + name);
         placesRepository.delete(place);
@@ -172,7 +169,7 @@ public class PlacesServiceImpl implements PlacesService {
                 Files.write(fileAndPath, m.getBytes());
                 new File(fileAndPath.toString());
             }
-            placesRepository.findByName(place).setCount(i);
+            placesRepository.findByName(place).orElseThrow(PlaceNotFoundException::new).setCount(i);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,7 +189,7 @@ public class PlacesServiceImpl implements PlacesService {
                 file = new File(uploadDir + j + ".jpg");
                 file.renameTo(dest);
             }
-        placesRepository.findByName(place).setCount(i - 1);
+        placesRepository.findByName(place).orElseThrow(PlaceNotFoundException::new).setCount(i - 1);
     }
 
     private void saveReactionAndAddToLists(Reaction reaction,User user,Place place){

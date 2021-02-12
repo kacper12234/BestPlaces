@@ -44,8 +44,8 @@ public class Place {
 
     private Integer count;
 
-    public Integer getRate(Type type) {
-        return Math.toIntExact(reactionList.stream().filter(reaction -> reaction.getType() == type).count());
+    public Integer getRate(Rate rate) {
+        return Math.toIntExact(reactionList.stream().filter(reaction -> reaction.getRate() == rate).count());
     }
 
 }

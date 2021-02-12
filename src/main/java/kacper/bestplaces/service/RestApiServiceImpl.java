@@ -29,7 +29,11 @@ import kacper.bestplaces.model.pldtls.Details;
 import kacper.bestplaces.model.plsearch.ExplorePlaces;
 import kacper.bestplaces.model.plsearch.Item;
 
-import static kacper.bestplaces.constants.AppConstants.IMAGES;
+import static kacper.bestplaces.constants.AppConstants.hereApiKey;
+import static kacper.bestplaces.constants.AppConstants.hereContext;
+import static kacper.bestplaces.constants.AppConstants.hereURL;
+import static kacper.bestplaces.constants.AppConstants.hereURL2;
+import static kacper.bestplaces.utilities.AppUtils.IMAGES;
 
 @AllArgsConstructor
 @Service("restApiService")
@@ -40,51 +44,51 @@ public class RestApiServiceImpl implements RestApiService {
 
     @Override
     @Async("load")
+
     public void getPlaces() throws IOException, FlickrException {
         String[] coords = {"21.64,52.4,23.59,54.37", "21.79,50.35,23.67,52.26", "21.26,49.1,23.14,50.32", "19.54,49.38,21.76,51.12", "19.53,51.2,21.76,53.43",
                 "19.27,53.21,21.75,54.41", "16.68,53.57,19.34,54.82", "17.34,52.42,19.63,53.71", "17.25,51.11,19.45,52.6", "17.25,49.65,19.5,51.03",
                 "14.98,50.43,17.23,51.79", "14.57,51.57,17.49,52.91", "14.23,52.9,16.92,54.42"};
         for (int i = 0; i < coords.length; i++) {
-            RestTemplate rt = new RestTemplate();
-            String hereApiKey = "f0fvPzMKTkmZhlNjS_Ot9QCdpP8PyR49dIdHMnBk2bY";
-            String url = "https://places.sit.ls.hereapi.com/places/v1/discover/"
-                    + "explore?languages=pl-PL&cat=sights-museums,natural-geographical&in=" + coords[i] + "&size=100&apiKey=" + hereApiKey;
-            ResponseEntity<ExplorePlaces> places = rt.exchange(url,
-                    HttpMethod.GET,
-                    new HttpEntity<>(null),
-                    ExplorePlaces.class);
-            String flickrApiKey = "d4c5f6cfc14f7fed7ff028885ef643d1";
-            String flickrSecret = "e2f331a3bf83595e";
+            getWithin(coords[i]);
+            System.out.println("Progress: " + (double) (i + 1) / coords.length * 100 + "%");
+        }
+    }
 
-            Flickr flickr = new Flickr(flickrApiKey, flickrSecret, new REST());
-            PhotosInterface photos;
-            SearchParameters params;
-            for (Item item : Objects.requireNonNull(places.getBody()).getResults().getItems()) {
-                if (placesService.findPlaceByName(item.getTitle()) == null) {
-                    url = "https://places.demo.api.here.com/places/v1/places/" + item.getId()
-                            + ";context="
-                            + "Zmxvdy1pZD0yNWEwOTkyOS0wNDIzLTU3NTUtYWIwYS1mNzkyNDZjNmRkM2VfMTU5MDE1ODcxMjE1N18wXzE1OTkmc2l6ZT01JlgtRldELUFQUC1JRD1EZW1vQXBwSWQwMTA4MjAxM0dBTCZYLU5MUC1UZXN0aW5nPTE"
-                            + "?app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg";
-                    ResponseEntity<Details> placeDetails = rt.exchange(url,
-                            HttpMethod.GET,
-                            new HttpEntity<>(null),
-                            Details.class);
+    public void getWithin(String bbox) throws FlickrException, IOException {
+        RestTemplate rt = new RestTemplate();
+        String url = hereURL + bbox + "&size=100&apiKey=" + hereApiKey;
+        ResponseEntity<ExplorePlaces> places = rt.exchange(url,
+                HttpMethod.GET,
+                new HttpEntity<>(null),
+                ExplorePlaces.class);
+        String flickrApiKey = "d4c5f6cfc14f7fed7ff028885ef643d1";
+        String flickrSecret = "e2f331a3bf83595e";
 
-                    String name = Objects.requireNonNull(placeDetails.getBody()).getName();
+        Flickr flickr = new Flickr(flickrApiKey, flickrSecret, new REST());
+        PhotosInterface photos;
+        SearchParameters params;
+        for (Item item : Objects.requireNonNull(places.getBody()).getResults().getItems()) {
+            if (placesService.findPlaceByName(item.getTitle()) == null) {
+                url = hereURL2 + item.getId() + hereContext;
+                ResponseEntity<Details> placeDetails = rt.exchange(url,
+                        HttpMethod.GET,
+                        new HttpEntity<>(null),
+                        Details.class);
 
-                    if (placeDetails.getBody().getMedia().getEditorials() != null && name.length() <= 50) {
-                        photos = flickr.getPhotosInterface();
-                        params = new SearchParameters();
-                        params.setText(name);
-                        params.setSort(SearchParameters.RELEVANCE);
-                        params.setLatitude(placeDetails.getBody().getLocation().getPosition().get(0).toString());
-                        params.setLongitude(placeDetails.getBody().getLocation().getPosition().get(1).toString());
+                String name = Objects.requireNonNull(placeDetails.getBody()).getName();
 
-                        savePlace(placeDetails.getBody(), photos.search(params, 5, 0), item.getCategory().getId());
-                    }
+                if (placeDetails.getBody().getMedia().getEditorials() != null && name.length() <= 50) {
+                    photos = flickr.getPhotosInterface();
+                    params = new SearchParameters();
+                    params.setText(name);
+                    params.setSort(SearchParameters.RELEVANCE);
+                    params.setLatitude(placeDetails.getBody().getLocation().getPosition().get(0).toString());
+                    params.setLongitude(placeDetails.getBody().getLocation().getPosition().get(1).toString());
+
+                    savePlace(placeDetails.getBody(), photos.search(params, 5, 0), item.getCategory().getId());
                 }
             }
-            System.out.println("Progress: " + (double) (i + 1) / coords.length * 100 + "%");
         }
     }
 

@@ -23,7 +23,7 @@ public class Reaction {
 
 	@Column(name = "rate")
 	@Enumerated(EnumType.STRING)
-	private Type type;
+	private Rate rate;
 
 	private String comment;
 

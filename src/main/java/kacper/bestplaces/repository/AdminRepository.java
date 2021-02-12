@@ -14,8 +14,6 @@ import kacper.bestplaces.model.User;
 
 @Repository
 public interface AdminRepository extends JpaRepository<User, Integer> {
-
-	User findUserById(int id);
 	
 	@Modifying
 	@Query(value="UPDATE user SET active=:intActive WHERE id=:id", nativeQuery=true)

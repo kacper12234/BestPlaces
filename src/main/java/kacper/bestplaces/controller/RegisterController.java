@@ -23,7 +23,7 @@ import kacper.bestplaces.service.PlacesService;
 import kacper.bestplaces.utilities.AppUtils;
 import kacper.bestplaces.validators.UserRegisterValidator;
 
-import static kacper.bestplaces.utilities.AppUtils.BASE_URL;
+import static kacper.bestplaces.utilities.ServletUtils.BASE_URL;
 
 
 @AllArgsConstructor

@@ -1,8 +1,9 @@
 package kacper.bestplaces.service;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
+import kacper.bestplaces.exceptions.UserNotFoundException;
 import kacper.bestplaces.model.Role;
 import kacper.bestplaces.repository.RoleRepository;
 import kacper.bestplaces.model.User;
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findUserByEmail(String email) {
-		return userRepository.findByEmail(email);
+		return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
 		user.setActive(0);
 		
 		Role role = roleRepository.findByRole("ROLE_USER");
-		user.setRoles(new HashSet<>(Arrays.asList(role)));
+		user.setRoles(new HashSet<>(Collections.singletonList(role)));
 		
 		userRepository.save(user);
 		
@@ -40,7 +41,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void updateUserPassword(String newPassword, String email) {
-		// TODO Auto-generated method stub
 		userRepository.updateUserPassword(bCryptPasswordEncoder.encode(newPassword), email);
 	}
 
@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void resetUserPassword(String newPassword, String code) {
-		// TODO Auto-generated method stub
 		userRepository.resetUserPassword(bCryptPasswordEncoder.encode(newPassword), code);
 	}
 

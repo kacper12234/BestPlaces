@@ -9,7 +9,7 @@ import com.flickr4java.flickr.FlickrException;
 
 public interface RestApiService{
 
-	public void getPlaces() throws MalformedURLException, IOException, FlickrException;
+	void getPlaces() throws IOException, FlickrException;
 
 	
 }

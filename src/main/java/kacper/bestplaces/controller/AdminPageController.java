@@ -95,8 +95,8 @@ public class AdminPageController {
 		
 		Map<Integer, String> activityMap=prepareActivityMap();
 		
-		int rola=user.getRoles().iterator().next().getId();
-		user.setNrRoli(rola);
+		int role=user.getRoles().iterator().next().getId();
+		user.setRoleId(role);
 		
 		model.addAttribute("roleMap", roleMap);
 		model.addAttribute("activityMap", activityMap);
@@ -109,9 +109,9 @@ public class AdminPageController {
 	@RequestMapping(value = "/admin/updateuser/{id}")
 	public String updateUser(@PathVariable("id") int id, User user)
 	{
-		int nrRoli=user.getNrRoli();
-		int ifActive=user.getNrRoli();
-		adminService.updateUser(id, nrRoli, ifActive);
+		int roldeId=user.getRoleId();
+		int ifActive=user.getRoleId();
+		adminService.updateUser(id, roldeId, ifActive);
 		return "redirect:/admin/users/1";
 	}
 	
@@ -127,8 +127,8 @@ public class AdminPageController {
 		Page<User> pages=adminService.findAll(PageRequest.of(page, ELEMENTS));
 		for(User users:pages)
 		{
-			int numerRoli=users.getRoles().iterator().next().getId();
-			users.setNrRoli(numerRoli);
+			int roleId=users.getRoles().iterator().next().getId();
+			users.setRoleId(roleId);
 		}
 		return pages;
 	}
@@ -137,8 +137,8 @@ public class AdminPageController {
 		Page<User> pages=adminService.findAllSearch(searchWord,PageRequest.of(page, ELEMENTS));
 		for(User users:pages)
 		{
-			int numerRoli=users.getRoles().iterator().next().getId();
-			users.setNrRoli(numerRoli);
+			int roleId=users.getRoles().iterator().next().getId();
+			users.setRoleId(roleId);
 		}
 		return pages;
 	}
@@ -146,7 +146,7 @@ public class AdminPageController {
 	public Map<Integer, String> prepareRoleMap()
 	{
 		Locale locale=Locale.getDefault();
-		Map<Integer, String> roleMap=new HashMap<Integer, String>();
+		Map<Integer, String> roleMap= new HashMap<>();
 		roleMap.put(1, messageSource.getMessage("word.admin",null, locale));
 		roleMap.put(2, messageSource.getMessage("word.user",null, locale));
 		return roleMap;
@@ -155,7 +155,7 @@ public class AdminPageController {
 	public Map<Integer, String> prepareActivityMap()
 	{
 		Locale locale=Locale.getDefault();
-		Map<Integer, String> activityMap=new HashMap<Integer, String>();
+		Map<Integer, String> activityMap= new HashMap<>();
 		activityMap.put(0, messageSource.getMessage("word.nie",null, locale));
 		activityMap.put(1, messageSource.getMessage("word.tak",null, locale));
 		return activityMap;

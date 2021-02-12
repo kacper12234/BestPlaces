@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="kacper.bestplaces.model.Type" %>
+<%@ page import="kacper.bestplaces.model.Rate" %>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
@@ -113,9 +113,9 @@
                     <div class="col-auto">
                         <div class="row" style="margin: .5rem; ">
                             <sec:authorize access="isAuthenticated()">
-                                <a href="/places/${p.type }/${p.name }/rate/${Type.LIKE}">
+                                <a href="/places/${p.type }/${p.name }/rate/${Rate.LIKE}">
                                 <c:choose>
-                                    <c:when test="${reaction.type == Type.LIKE }">
+                                    <c:when test="${reaction.type == Rate.LIKE }">
                                             <i class="fas fa-thumbs-up fa-2x" style="color: blue;"></i>
                                     </c:when>
                                     <c:otherwise>
@@ -127,11 +127,11 @@
                             <sec:authorize access="hasRole('ANONYMOUS')">
                                 <i class="fas fa-thumbs-up fa-2x" style="color: green;"></i>
                             </sec:authorize>
-                            <h5 style="margin: .7rem"><c:out value="${p.getRate(Type.LIKE) }"/></h5>
+                            <h5 style="margin: .7rem"><c:out value="${p.getRate(Rate.LIKE) }"/></h5>
                             <sec:authorize access="isAuthenticated()">
-                                <a href="/places/${p.type }/${p.name }/rate/${Type.DISLIKE}">
+                                <a href="/places/${p.type }/${p.name }/rate/${Rate.DISLIKE}">
                                 <c:choose>
-                                    <c:when test="${reaction.type == Type.DISLIKE }">
+                                    <c:when test="${reaction.type == Rate.DISLIKE }">
                                             <i class="fas fa-thumbs-down fa-2x" style="color: blue;"></i>
                                     </c:when>
                                     <c:otherwise>
@@ -143,7 +143,7 @@
                             <sec:authorize access="hasRole('ANONYMOUS')">
                                 <i class="fas fa-thumbs-down fa-2x" style="color: red;"></i>
                             </sec:authorize>
-                            <h5 style="margin: .7rem"><c:out value="${p.getRate(Type.DISLIKE) }"/></h5>
+                            <h5 style="margin: .7rem"><c:out value="${p.getRate(Rate.DISLIKE) }"/></h5>
                         </div>
                     </div>
                     <div class="col" style="text-align: right;">
@@ -242,10 +242,10 @@
                             <h5><c:out value="${r.user.username}"/></h5>
                         </div>
                         <div class="col" style="text-align: right;">
-                            <c:if test="${r.type ==  Type.LIKE}">
+                            <c:if test="${r.type ==  Rate.LIKE}">
                                 <i class="fas fa-thumbs-up" style="color: green;"></i>
                             </c:if>
-                            <c:if test="${r.type == Type.DISLIKE }">
+                            <c:if test="${r.type == Rate.DISLIKE }">
                                 <i class="fas fa-thumbs-down" style="color: red;"></i>
                             </c:if>
                         </div>

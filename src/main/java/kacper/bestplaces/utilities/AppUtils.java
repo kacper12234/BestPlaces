@@ -8,9 +8,9 @@ import java.util.regex.Pattern;
 
 public class AppUtils {
 
-	public static final String BASE_URL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+    public static final String IMAGES = Thread.currentThread().getContextClassLoader().getResource("static/images/").getPath().substring(1);
 
-	public static boolean checkEmailOrPassword(String pattern, String pStr) {
+    public static boolean checkEmailOrPassword(String pattern, String pStr) {
 		
 		Pattern p = Pattern.compile(pattern);
 		Matcher m = p.matcher(pStr);

@@ -2,6 +2,7 @@ package kacper.bestplaces.service;
 
 import java.util.List;
 
+import kacper.bestplaces.exceptions.UserNotFoundException;
 import kacper.bestplaces.repository.AdminRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,14 +22,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Page<User> findAll(Pageable pageable) {
-        Page<User> userList = adminRepository.findAll(pageable);
-        return userList;
+        return adminRepository.findAll(pageable);
     }
 
     @Override
     public User findUserById(int id) {
-        User user = adminRepository.findUserById(id);
-        return user;
+        return adminRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     @Override
@@ -39,8 +38,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Page<User> findAllSearch(String param, Pageable pg) {
-        Page<User> userList = adminRepository.findAllSearch(param, pg);
-        return userList;
+        return adminRepository.findAllSearch(param, pg);
     }
 
     public void saveAll(List<User> userList) {

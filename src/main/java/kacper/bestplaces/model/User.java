@@ -56,7 +56,7 @@ public class User {
 	private String operacja;
 	
 	@Transient
-	private int nrRoli;
+	private int roleId;
 	
 	@Transient
 	private String newPassword;
@@ -64,5 +64,18 @@ public class User {
 	public String getUsername() {
 		return name + ' ' + lastName;
 	}
-	
+
+	private User(User user){
+		this.activationCode =user.activationCode;
+		this.email = user.email;
+		this.lastName = user.lastName;
+		this.name = user.name;
+		this.id = user.id;
+		this.password = user.password;
+	}
+
+	public User clone(){
+		return new User(this);
+	}
+
 }

@@ -20,7 +20,7 @@ public interface ReactionRepository extends JpaRepository<Reaction, Integer>{
 	void changeComment(@Param("comment") String comment,@Param("id") Integer id);
 	
 	@Modifying
-	@Query(value="DELETE FROM reactions WHERE id=:id",nativeQuery=true)
+	@Query(value="UPDATE reactions SET rate=NULL WHERE id=:id",nativeQuery=true)
 	void undoRate(@Param("id")Integer id);
 
 	@Modifying
